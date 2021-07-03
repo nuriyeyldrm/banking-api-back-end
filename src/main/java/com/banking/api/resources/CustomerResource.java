@@ -28,10 +28,8 @@ public class CustomerResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Customer> getCustomerById(HttpServletRequest request,
-                                                    @PathVariable("id") Long id){
-        Long userId = (Long) request.getAttribute("user_id");
-        Customer customer = customerService.fetchCustomerById(userId, id);
+    public ResponseEntity<Customer> getCustomerById(@PathVariable("id") Long id){
+        Customer customer = customerService.fetchCustomerById(id);
         return  new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
@@ -60,21 +58,17 @@ public class CustomerResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, Boolean>> updateCustomer(HttpServletRequest request,
-                                                               @PathVariable("id") Long id,
+    public ResponseEntity<Map<String, Boolean>> updateCustomer(@PathVariable("id") Long id,
                                                                @RequestBody Customer customer){
-        Long userId = (Long) request.getAttribute("user_id");
-        customerService.updateCustomer(userId, id, customer);
+        customerService.updateCustomer(id, customer);
         Map<String, Boolean> map = new HashMap<>();
         map.put("success", true);
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteCustomer(HttpServletRequest request,
-                                                               @PathVariable("id") Long id){
-        Long userId = (Long) request.getAttribute("user_id");
-        customerService.removeCustomer(userId, id);
+    public ResponseEntity<Map<String, Boolean>> deleteCustomer(@PathVariable("id") Long id){
+        customerService.removeCustomer(id);
         Map<String, Boolean> map = new HashMap<>();
         map.put("success", true);
         return new ResponseEntity<>(map, HttpStatus.OK);

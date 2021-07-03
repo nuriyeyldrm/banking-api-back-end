@@ -11,13 +11,13 @@ public interface CustomerService {
 
     List<Customer> fetchAllCustomers();
 
-    Customer fetchCustomerById(Long userId, Long id) throws BankResourceNotFoundException;
+    Customer fetchCustomerById(Long id) throws BankResourceNotFoundException;
 
     Customer addCustomer(Long userId, String firstName, String lastName, String middleInitial, String email,
                          String mobilePhoneNumber, String phoneNumber, String zipCode, String address, String state,
                          String city, String country, String ssn, Timestamp createdDate) throws BankBadRequestException;
 
-    void updateCustomer(Long userId, Long id, Customer customer) throws BankBadRequestException;
+    void updateCustomer(Long id, Customer customer) throws BankBadRequestException;
 
-    void removeCustomer(Long userId, Long id) throws BankResourceNotFoundException;
+    void removeCustomer(Long id) throws BankResourceNotFoundException;
 }

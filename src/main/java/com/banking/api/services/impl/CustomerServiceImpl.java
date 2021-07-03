@@ -25,8 +25,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer fetchCustomerById(Long userId, Long id) throws BankResourceNotFoundException {
-        return customerRepository.findById(userId, id);
+    public Customer fetchCustomerById(Long id) throws BankResourceNotFoundException {
+        return customerRepository.findById(id);
     }
 
     @Override
@@ -36,17 +36,17 @@ public class CustomerServiceImpl implements CustomerService {
                                 Timestamp createdDate) throws BankBadRequestException {
         Long id = customerRepository.create(userId, firstName, lastName, middleInitial, email, mobilePhoneNumber,
                 phoneNumber, zipCode, address, state, city, country, ssn, createdDate);
-        return customerRepository.findById(userId, id);
+        return customerRepository.findById(id);
     }
 
     @Override
-    public void updateCustomer(Long userId, Long id, Customer customer) throws BankBadRequestException {
-        customerRepository.update(userId, id, customer);
+    public void updateCustomer(Long id, Customer customer) throws BankBadRequestException {
+        customerRepository.update(id, customer);
     }
 
     @Override
-    public void removeCustomer(Long userId, Long id) throws BankResourceNotFoundException {
-        this.fetchCustomerById(userId, id);
-        customerRepository.removeById(userId, id);
+    public void removeCustomer(Long id) throws BankResourceNotFoundException {
+        this.fetchCustomerById(id);
+        customerRepository.removeById(id);
     }
 }

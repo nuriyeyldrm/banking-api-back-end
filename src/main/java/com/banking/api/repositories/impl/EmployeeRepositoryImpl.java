@@ -1,9 +1,9 @@
 package com.banking.api.repositories.impl;
 
-import com.banking.api.domain.Customer;
+import com.banking.api.domain.Employee;
 import com.banking.api.exceptions.BankBadRequestException;
 import com.banking.api.exceptions.BankResourceNotFoundException;
-import com.banking.api.repositories.CustomerRepository;
+import com.banking.api.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,28 +14,27 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 @Repository
-public class CustomerRepositoryImpl implements CustomerRepository {
+public class EmployeeRepositoryImpl implements EmployeeRepository {
 
-    private static final String SQL_CREATE = "INSERT INTO customers (id, user_id, first_name, last_name, " +
-            "middle_initial, email, mobile_phone_number, phone_number, zip_code, address, state, city, country," +
+    private static final String SQL_CREATE = "INSERT INTO employees (id, user_id, first_name, last_name, " +
+            "email, hired_date, mobile_phone_number, phone_number, zip_code, address, state, city, country," +
             "ssn, created_date) " +
-            "VALUES(NEXTVAL('CUSTOMERS_SEQ'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "VALUES(NEXTVAL('EMPLOYEES_SEQ'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    private static final String SQL_FIND_BY_ID = "SELECT id, user_id, first_name, last_name, middle_initial, " +
-            "email, mobile_phone_number, phone_number, zip_code, address, state, country, city, ssn, created_date " +
-            "FROM customers WHERE id = ?";
-
-    private static final String SQL_FIND_ALL = "SELECT id, user_id, first_name, last_name, middle_initial, email, " +
+    private static final String SQL_FIND_BY_ID = "SELECT id, user_id, first_name, last_name, email, hired_date, " +
             "mobile_phone_number, phone_number, zip_code, address, state, city, country, ssn, created_date " +
-            "FROM customers";
+            "FROM employees WHERE id = ?";
 
-    private static final String SQL_UPDATE = "UPDATE customers SET first_name = ?, last_name = ?, middle_initial = ?, " +
-            "email = ?, mobile_phone_number = ?, phone_number = ?, zip_code = ?, address = ?, state = ?, city = ?, " +
-            "country = ?, ssn = ?, created_date = ? WHERE id = ?";
+    private static final String SQL_FIND_ALL = "SELECT id, user_id, first_name, last_name, email, hired_date, " +
+            "mobile_phone_number, phone_number, zip_code, address, state, city, country, ssn, created_date " +
+            "FROM employees";
+
+    private static final String SQL_UPDATE = "UPDATE employees SET first_name = ?, last_name = ?, email = ?, " +
+            "mobile_phone_number = ?, phone_number = ?, zip_code = ?, address = ?, state = ?, city = ?, " +
+            "country = ?, ssn = ? WHERE id = ?";
 
     private static final String SQL_DELETE = "DELETE FROM customers WHERE id = ?";
 
@@ -43,24 +42,23 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<Customer> findAll() throws BankResourceNotFoundException {
-        return jdbcTemplate.query(SQL_FIND_ALL, customerRowMapper);
+    public List<Employee> findAll() throws BankResourceNotFoundException {
+        return jdbcTemplate.query(SQL_FIND_ALL, employeeRowMapper);
     }
 
     @Override
-    public Customer findById(Long id) throws BankResourceNotFoundException {
+    public Employee findById(Long id) throws BankResourceNotFoundException {
         try {
-            return jdbcTemplate.queryForObject(SQL_FIND_BY_ID, customerRowMapper, id);
+            return jdbcTemplate.queryForObject(SQL_FIND_BY_ID, employeeRowMapper, id);
         }catch (Exception e){
-            throw new BankResourceNotFoundException("Customer not found");
+            throw new BankResourceNotFoundException("Employee not found");
         }
     }
 
     @Override
-    public Long create(Long userId, String firstName, String lastName, String middleInitial, String email,
+    public Long create(Long userId, String firstName, String lastName, String email, Timestamp hiredDate,
                        String mobilePhoneNumber, String phoneNumber, String zipCode, String address, String state,
-                       String city, String country, String ssn, Timestamp createdDate)
-            throws BankBadRequestException {
+                       String city, String country, String ssn, Timestamp createdDate) throws BankBadRequestException {
         try{
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(connection -> {
@@ -68,8 +66,8 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                 ps.setLong(1, userId);
                 ps.setString(2, firstName);
                 ps.setString(3, lastName);
-                ps.setString(4, middleInitial);
-                ps.setString(5, email);
+                ps.setString(4, email);
+                ps.setTimestamp(5, hiredDate);
                 ps.setString(6, mobilePhoneNumber);
                 ps.setString(7, phoneNumber);
                 ps.setString(8, zipCode);
@@ -88,16 +86,12 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     }
 
     @Override
-    public void update(Long id, Customer customer) throws BankBadRequestException {
+    public void update(Long id, Employee employee) throws BankBadRequestException {
         try {
-            Date date= new Date();
-            long time = date.getTime();
-            Timestamp createdDate = new Timestamp(time);
-            customer.setCreatedDate(createdDate);
-            jdbcTemplate.update(SQL_UPDATE, customer.getFirstName(), customer.getLastName(), customer.getMiddleInitial(),
-                    customer.getEmail(), customer.getMobilePhoneNumber(), customer.getPhoneNumber(), customer.getZipCode(),
-                    customer.getAddress(), customer.getState(), customer.getCity(), customer.getCountry(), customer.getSsn(),
-                    customer.getCreatedDate(), id);
+            jdbcTemplate.update(SQL_UPDATE, employee.getFirstName(), employee.getLastName(), employee.getEmail(),
+                    employee.getMobilePhoneNumber(), employee.getPhoneNumber(), employee.getZipCode(),
+                    employee.getAddress(), employee.getState(), employee.getCity(), employee.getCountry(),
+                    employee.getSsn(), id);
         }catch (Exception e){
             throw new BankBadRequestException("Invalid request");
         }
@@ -107,16 +101,16 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     public void removeById(Long id) {
         int count = jdbcTemplate.update(SQL_DELETE, id);
         if (count == 0)
-            throw new BankResourceNotFoundException("Customer not found");
+            throw new BankResourceNotFoundException("Employee not found");
     }
 
-    private RowMapper<Customer> customerRowMapper = ((rs, rowNum) -> {
-        return new Customer(rs.getLong("id"),
+    private RowMapper<Employee> employeeRowMapper = ((rs, rowNum) -> {
+        return new Employee(rs.getLong("id"),
                 rs.getLong("user_id"),
                 rs.getString("first_name"),
                 rs.getString("last_name"),
-                rs.getString("middle_initial"),
                 rs.getString("email"),
+                rs.getTimestamp("hired_date"),
                 rs.getString("mobile_phone_number"),
                 rs.getString("phone_number"),
                 rs.getString("zip_code"),
