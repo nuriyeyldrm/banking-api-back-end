@@ -24,31 +24,46 @@ public class AccountRepositoryImpl implements AccountRepository {
     private static final String SQL_CREATE = "INSERT INTO accounts (id, user_id, description, balance, account_type, " +
             "account_status_type, created_date) VALUES(NEXTVAL('ACCOUNTS_SEQ'), ?, ?, ?, ?, ?, ?)";
 
-    private static final String SQL_FIND_ALL = "SELECT id, description, balance, account_type, account_status_type, " +
-            "created_date FROM accounts WHERE user_id = ?";
+    private static final String SQL_FIND_BY_ID = "SELECT id, user_id, description, balance, account_type, " +
+            "account_status_type, created_date FROM accounts WHERE user_id = ? AND id = ?";
+
+    private static final String SQL_FIND_ALL = "SELECT id, user_id, description, balance, account_type, " +
+            "account_status_type, created_date FROM accounts WHERE user_id = ?";
+
+    private static final String SQL_UPDATE = "UPDATE accounts SET description = ?, balance = ?, account_type = ?, " +
+            "account_status_type = ? WHERE user_id = ? AND id = ?";
+
+    private static final String SQL_DELETE = "DELETE FROM accounts WHERE user_id = ? AND " +
+            "id = ?";
+
+
 
 
     @Autowired
     JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<Account> findAll(Integer userId) throws BankResourceNotFoundException {
+    public List<Account> findAll(Long userId) throws BankResourceNotFoundException {
         return jdbcTemplate.query(SQL_FIND_ALL, accountRowMapper, userId);
     }
 
     @Override
-    public Account findById(Integer userId, Long id) throws BankResourceNotFoundException {
-        return null;
+    public Account findById(Long userId, Long id) throws BankResourceNotFoundException {
+        try {
+            return jdbcTemplate.queryForObject(SQL_FIND_BY_ID, accountRowMapper, userId, id);
+        }catch (Exception e){
+            throw new BankResourceNotFoundException("Account not found");
+        }
     }
 
     @Override
-    public Long create(Integer userId, String description, Integer balance, String accountType,
+    public Long create(Long userId, String description, Integer balance, String accountType,
                        String accountStatusType, Timestamp createdDate) throws BankBadRequestException {
         try{
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(connection -> {
                 PreparedStatement ps = connection.prepareStatement(SQL_CREATE, Statement.RETURN_GENERATED_KEYS);
-                ps.setInt(1, userId);
+                ps.setLong(1, userId);
                 ps.setString(2, description);
                 ps.setInt(3, balance);
                 ps.setString(4, accountType);
@@ -63,18 +78,25 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public void update(Integer userId, Long id, Account account) throws BankBadRequestException {
-
+    public void update(Long userId, Long id, Account account) throws BankBadRequestException {
+        try {
+            jdbcTemplate.update(SQL_UPDATE, account.getDescription(), account.getBalance(), account.getAccountType(),
+                    account.getAccountStatusType(), userId, id);
+        }catch (Exception e){
+            throw new BankBadRequestException("Invalid request");
+        }
     }
 
     @Override
-    public void removeById(Integer userId, Long id) {
-
+    public void removeById(Long userId, Long id) {
+        int count = jdbcTemplate.update(SQL_DELETE, userId, id);
+        if(count == 0)
+            throw new BankResourceNotFoundException("Account not found");
     }
 
     private RowMapper<Account> accountRowMapper = ((rs, rowNum) -> {
         return new Account(rs.getLong("id"),
-                rs.getInt("user_id"),
+                rs.getLong("user_id"),
                 rs.getString("description"),
                 rs.getInt("balance"),
                 rs.getString("account_type"),

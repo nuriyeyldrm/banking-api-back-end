@@ -11,14 +11,14 @@ import java.util.List;
 
 public interface AccountRepository {
 
-    List<Account> findAll(Integer userId) throws BankResourceNotFoundException;
+    List<Account> findAll(Long userId) throws BankResourceNotFoundException;
 
-    Account findById(Integer userId, Long id) throws BankResourceNotFoundException;
+    Account findById(Long userId, Long id) throws BankResourceNotFoundException;
 
-    Long create(Integer userId, String description, Integer balance, String accountType,
+    Long create(Long userId, String description, Integer balance, String accountType,
                 String accountStatusType, Timestamp createdDate) throws BankBadRequestException;
 
-    void update(Integer userId, Long id, Account account) throws BankBadRequestException;
+    void update(Long userId, Long id, Account account) throws BankBadRequestException;
 
-    void removeById(Integer userId, Long id);
+    void removeById(Long userId, Long id);
 }

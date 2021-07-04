@@ -20,7 +20,7 @@ public class Account implements Serializable {
     private Long id;
 
     @NotNull
-    private Integer userId;
+    private Long userId;
 
     @NotNull
     @Column(name = "description", nullable = false)
@@ -38,7 +38,6 @@ public class Account implements Serializable {
     @Column(name = "account_status_type", nullable = false)
     private String accountStatusType;
 
-    @NotNull
     @Column(name = "created_date", nullable = false)
     private Timestamp createdDate;
 
@@ -46,7 +45,7 @@ public class Account implements Serializable {
 
     }
 
-    public Account(Long id, Integer userId, String description, Integer balance, String accountType,
+    public Account(Long id, Long userId, String description, Integer balance, String accountType,
                    String accountStatusType, Timestamp createdDate) {
         this.id = id;
         this.userId = userId;
@@ -65,11 +64,11 @@ public class Account implements Serializable {
         this.id = id;
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

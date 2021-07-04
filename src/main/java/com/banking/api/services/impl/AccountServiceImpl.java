@@ -22,29 +22,30 @@ public class AccountServiceImpl implements AccountService {
     AccountRepository accountRepository;
 
     @Override
-    public List<Account> fetchAllAccounts(Integer userId) {
+    public List<Account> fetchAllAccounts(Long userId) {
         return accountRepository.findAll(userId);
     }
 
     @Override
-    public Account fetchAccountById(Integer userId, Long id) throws BankResourceNotFoundException {
+    public Account fetchAccountById(Long userId, Long id) throws BankResourceNotFoundException {
         return accountRepository.findById(userId, id);
     }
 
     @Override
-    public Account addAccount(Integer userId, String description, Integer balance, String accountType,
-                              String accountStatusType, Timestamp createdDate) throws BankBadRequestException {
+    public Account addAccount(Long userId, String description, Integer balance, String accountType,
+                              String accountStatusType, Timestamp createdDate)
+            throws BankBadRequestException {
         Long id = accountRepository.create(userId, description, balance, accountType, accountStatusType, createdDate);
         return accountRepository.findById(userId, id);
     }
 
     @Override
-    public void updateAccount(Integer userId, Long id, Account account) throws BankBadRequestException {
+    public void updateAccount(Long userId, Long id, Account account) throws BankBadRequestException {
         accountRepository.update(userId, id, account);
     }
 
     @Override
-    public void removeAccountWithAllTransactions(Integer userId, Long id) throws BankResourceNotFoundException {
+    public void removeAccount(Long userId, Long id) throws BankResourceNotFoundException {
         this.fetchAccountById(userId, id);
         accountRepository.removeById(userId, id);
     }

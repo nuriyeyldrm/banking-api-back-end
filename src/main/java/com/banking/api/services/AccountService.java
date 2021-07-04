@@ -11,15 +11,15 @@ import java.util.List;
 
 public interface AccountService {
 
-    List<Account> fetchAllAccounts(Integer userId);
+    List<Account> fetchAllAccounts(Long userId);
 
-    Account fetchAccountById(Integer userId, Long id) throws BankResourceNotFoundException;
+    Account fetchAccountById(Long userId, Long id) throws BankResourceNotFoundException;
 
-    Account addAccount(Integer userId, String description, Integer balance, String accountType,
+    Account addAccount(Long userId, String description, Integer balance, String accountType,
                        String accountStatusType, Timestamp createdDate) throws BankBadRequestException;
 
-    void updateAccount(Integer userId, Long id, Account account) throws BankBadRequestException;
+    void updateAccount(Long userId, Long id, Account account) throws BankBadRequestException;
 
-    void removeAccountWithAllTransactions(Integer userId, Long id) throws BankResourceNotFoundException;
+    void removeAccount(Long userId, Long id) throws BankResourceNotFoundException;
 
 }

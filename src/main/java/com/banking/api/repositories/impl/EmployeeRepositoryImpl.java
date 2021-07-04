@@ -36,7 +36,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
             "mobile_phone_number = ?, phone_number = ?, zip_code = ?, address = ?, state = ?, city = ?, " +
             "country = ?, ssn = ? WHERE id = ?";
 
-    private static final String SQL_DELETE = "DELETE FROM customers WHERE id = ?";
+    private static final String SQL_DELETE = "DELETE FROM employees WHERE id = ?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
