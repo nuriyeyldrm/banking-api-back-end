@@ -37,6 +37,7 @@ public class BankingApiBackEndApplication {
         registrationBean.setFilter(authFilter);
         registrationBean.addUrlPatterns("/api/categories/*");
         registrationBean.addUrlPatterns("/api/customers/*");
+        registrationBean.addUrlPatterns("/api/employees/*");
         return registrationBean;
     }
 
