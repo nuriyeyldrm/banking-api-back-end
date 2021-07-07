@@ -75,11 +75,10 @@ public class CustomerResource {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
-    @GetMapping("/accounts/{id}")
-    public ResponseEntity<List<Account>> getAllCustomersAccounts(HttpServletRequest request,
-                                                            @PathVariable("id") Long id){
+    @GetMapping("/accounts")
+    public ResponseEntity<List<Account>> getAllCustomersAccounts(HttpServletRequest request){
         Long userId = (Long) request.getAttribute("id");
-        List<Account> account = customerService.fetchAllCustomersAccount(id, userId);
+        List<Account> account = customerService.fetchAllCustomersAccount(userId);
         return  new ResponseEntity<>(account, HttpStatus.OK);
     }
 }

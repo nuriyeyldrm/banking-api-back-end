@@ -66,9 +66,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(Long id, User user)
             throws BankBadRequestException {
-        Integer count = userRepository.getCountByEmail(user.getEmail());
-        if(count > 0)
-            throw new BankAuthException("Email already in use");
         userRepository.update(id, user);
     }
 

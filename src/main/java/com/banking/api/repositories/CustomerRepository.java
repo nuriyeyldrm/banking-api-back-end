@@ -22,5 +22,5 @@ public interface CustomerRepository {
 
     void removeById(Long id);
 
-    List<Account> findAllAccounts(Long id, Long userId) throws BankResourceNotFoundException;
+    List<Account> findAllAccounts(Long userId) throws BankResourceNotFoundException;
 }

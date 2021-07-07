@@ -116,7 +116,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     }
 
     @Override
-    public List<Account> findAllAccounts(Long id, Long userId) throws BankResourceNotFoundException {
+    public List<Account> findAllAccounts(Long userId) throws BankResourceNotFoundException {
         return jdbcTemplate.query(SQL_FIND_ALL_CST_ACC, accountRowMapper, userId);
     }
 

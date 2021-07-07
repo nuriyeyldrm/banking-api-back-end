@@ -22,5 +22,5 @@ public interface CustomerService {
 
     void removeCustomer(Long id) throws BankResourceNotFoundException;
 
-    List<Account> fetchAllCustomersAccount(Long id, Long userId);
+    List<Account> fetchAllCustomersAccount(Long userId);
 }

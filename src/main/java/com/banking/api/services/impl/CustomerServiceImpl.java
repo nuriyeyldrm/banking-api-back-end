@@ -52,7 +52,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Account> fetchAllCustomersAccount(Long id, Long userId) {
-        return customerRepository.findAllAccounts(id, userId);
+    public List<Account> fetchAllCustomersAccount(Long userId) {
+        return customerRepository.findAllAccounts(userId);
     }
 }
