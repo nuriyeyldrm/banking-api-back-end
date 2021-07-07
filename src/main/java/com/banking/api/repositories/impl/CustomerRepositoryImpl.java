@@ -1,5 +1,6 @@
 package com.banking.api.repositories.impl;
 
+import com.banking.api.domain.Account;
 import com.banking.api.domain.Customer;
 import com.banking.api.exceptions.BankBadRequestException;
 import com.banking.api.exceptions.BankResourceNotFoundException;
@@ -33,6 +34,9 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             "mobile_phone_number, phone_number, zip_code, address, state, city, country, ssn, created_date " +
             "FROM customers";
 
+    private static final String SQL_FIND_ALL_CST_ACC = "SELECT id, user_id, description, balance, account_type, " +
+            "account_status_type, created_date FROM accounts WHERE user_id = ?";
+
     private static final String SQL_UPDATE = "UPDATE customers SET first_name = ?, last_name = ?, middle_initial = ?, " +
             "email = ?, mobile_phone_number = ?, phone_number = ?, zip_code = ?, address = ?, state = ?, city = ?, " +
             "country = ?, ssn = ?, created_date = ? WHERE id = ?";
@@ -61,6 +65,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                        String mobilePhoneNumber, String phoneNumber, String zipCode, String address, String state,
                        String city, String country, String ssn, Timestamp createdDate)
             throws BankBadRequestException {
+
         try{
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(connection -> {
@@ -110,6 +115,11 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             throw new BankResourceNotFoundException("Customer not found");
     }
 
+    @Override
+    public List<Account> findAllAccounts(Long id, Long userId) throws BankResourceNotFoundException {
+        return jdbcTemplate.query(SQL_FIND_ALL_CST_ACC, accountRowMapper, userId);
+    }
+
     private RowMapper<Customer> customerRowMapper = ((rs, rowNum) -> {
         return new Customer(rs.getLong("id"),
                 rs.getLong("user_id"),
@@ -127,4 +137,15 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                 rs.getString("ssn"),
                 rs.getTimestamp("created_date"));
     });
+
+    private RowMapper<Account> accountRowMapper = ((rs, rowNum) -> {
+        return new Account(rs.getLong("id"),
+                rs.getLong("user_id"),
+                rs.getString("description"),
+                rs.getDouble("balance"),
+                rs.getString("account_type"),
+                rs.getString("account_status_type"),
+                rs.getTimestamp("created_date"));
+    });
+
 }

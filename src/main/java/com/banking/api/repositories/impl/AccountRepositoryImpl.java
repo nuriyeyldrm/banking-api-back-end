@@ -57,7 +57,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public Long create(Long userId, String description, Integer balance, String accountType,
+    public Long create(Long userId, String description, Double balance, String accountType,
                        String accountStatusType, Timestamp createdDate) throws BankBadRequestException {
         try{
             KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -65,7 +65,7 @@ public class AccountRepositoryImpl implements AccountRepository {
                 PreparedStatement ps = connection.prepareStatement(SQL_CREATE, Statement.RETURN_GENERATED_KEYS);
                 ps.setLong(1, userId);
                 ps.setString(2, description);
-                ps.setInt(3, balance);
+                ps.setDouble(3, balance);
                 ps.setString(4, accountType);
                 ps.setString(5, accountStatusType);
                 ps.setTimestamp(6, createdDate);
@@ -98,7 +98,7 @@ public class AccountRepositoryImpl implements AccountRepository {
         return new Account(rs.getLong("id"),
                 rs.getLong("user_id"),
                 rs.getString("description"),
-                rs.getInt("balance"),
+                rs.getDouble("balance"),
                 rs.getString("account_type"),
                 rs.getString("account_status_type"),
                 rs.getTimestamp("created_date"));

@@ -15,7 +15,7 @@ public interface AccountService {
 
     Account fetchAccountById(Long userId, Long id) throws BankResourceNotFoundException;
 
-    Account addAccount(Long userId, String description, Integer balance, String accountType,
+    Account addAccount(Long userId, String description, Double balance, String accountType,
                        String accountStatusType, Timestamp createdDate) throws BankBadRequestException;
 
     void updateAccount(Long userId, Long id, Account account) throws BankBadRequestException;

@@ -1,5 +1,6 @@
 package com.banking.api.services.impl;
 
+import com.banking.api.domain.Account;
 import com.banking.api.domain.Customer;
 import com.banking.api.exceptions.BankBadRequestException;
 import com.banking.api.exceptions.BankResourceNotFoundException;
@@ -48,5 +49,10 @@ public class CustomerServiceImpl implements CustomerService {
     public void removeCustomer(Long id) throws BankResourceNotFoundException {
         this.fetchCustomerById(id);
         customerRepository.removeById(id);
+    }
+
+    @Override
+    public List<Account> fetchAllCustomersAccount(Long id, Long userId) {
+        return customerRepository.findAllAccounts(id, userId);
     }
 }

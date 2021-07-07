@@ -15,7 +15,7 @@ public interface AccountRepository {
 
     Account findById(Long userId, Long id) throws BankResourceNotFoundException;
 
-    Long create(Long userId, String description, Integer balance, String accountType,
+    Long create(Long userId, String description, Double balance, String accountType,
                 String accountStatusType, Timestamp createdDate) throws BankBadRequestException;
 
     void update(Long userId, Long id, Account account) throws BankBadRequestException;

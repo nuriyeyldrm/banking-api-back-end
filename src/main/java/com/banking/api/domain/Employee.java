@@ -1,12 +1,9 @@
 package com.banking.api.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.time.Instant;
 
 @Entity
 @Table(name = "employees")

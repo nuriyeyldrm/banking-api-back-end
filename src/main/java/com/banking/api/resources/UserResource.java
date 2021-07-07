@@ -1,6 +1,6 @@
 package com.banking.api.resources;
 
-import com.banking.api.Constants;
+import com.banking.api.config.Constants;
 import com.banking.api.domain.User;
 import com.banking.api.services.UserService;
 import io.jsonwebtoken.Jwts;

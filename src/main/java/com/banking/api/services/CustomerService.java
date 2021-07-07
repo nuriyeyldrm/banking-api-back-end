@@ -1,5 +1,6 @@
 package com.banking.api.services;
 
+import com.banking.api.domain.Account;
 import com.banking.api.domain.Customer;
 import com.banking.api.exceptions.BankBadRequestException;
 import com.banking.api.exceptions.BankResourceNotFoundException;
@@ -20,4 +21,6 @@ public interface CustomerService {
     void updateCustomer(Long id, Customer customer) throws BankBadRequestException;
 
     void removeCustomer(Long id) throws BankResourceNotFoundException;
+
+    List<Account> fetchAllCustomersAccount(Long id, Long userId);
 }

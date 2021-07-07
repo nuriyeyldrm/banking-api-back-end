@@ -1,5 +1,6 @@
 package com.banking.api.repositories;
 
+import com.banking.api.domain.Account;
 import com.banking.api.domain.Customer;
 import com.banking.api.exceptions.BankBadRequestException;
 import com.banking.api.exceptions.BankResourceNotFoundException;
@@ -20,4 +21,6 @@ public interface CustomerRepository {
     void update(Long id, Customer customer) throws BankBadRequestException;
 
     void removeById(Long id);
+
+    List<Account> findAllAccounts(Long id, Long userId) throws BankResourceNotFoundException;
 }

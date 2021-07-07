@@ -32,7 +32,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account addAccount(Long userId, String description, Integer balance, String accountType,
+    public Account addAccount(Long userId, String description, Double balance, String accountType,
                               String accountStatusType, Timestamp createdDate)
             throws BankBadRequestException {
         Long id = accountRepository.create(userId, description, balance, accountType, accountStatusType, createdDate);

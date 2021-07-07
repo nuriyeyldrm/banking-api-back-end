@@ -41,7 +41,7 @@ public class AccountResource {
                                               @RequestBody Map<String, Object> accountMap){
         Long userId = (Long) request.getAttribute("id");
         String description = (String) accountMap.get("description");
-        Integer balance = (Integer) accountMap.get("balance");
+        Double balance = (Double) accountMap.get("balance");
         String accountType = (String) accountMap.get("accountType");
         String accountStatusType = (String) accountMap.get("accountStatusType");
         Date date= new Date();

@@ -1,6 +1,7 @@
 package com.banking.api.repositories.impl;
 
 import com.banking.api.domain.Employee;
+import com.banking.api.domain.User;
 import com.banking.api.exceptions.BankBadRequestException;
 import com.banking.api.exceptions.BankResourceNotFoundException;
 import com.banking.api.repositories.EmployeeRepository;

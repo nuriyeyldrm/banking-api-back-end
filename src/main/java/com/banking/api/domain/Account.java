@@ -1,8 +1,5 @@
 package com.banking.api.domain;
 
-import com.banking.api.domain.enumeration.AccountStatusType;
-import com.banking.api.domain.enumeration.AccountType;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -28,7 +25,7 @@ public class Account implements Serializable {
 
     @NotNull
     @Column(name = "balance", nullable = false)
-    private Integer balance;
+    private Double balance;
 
     @NotNull
     @Column(name = "account_type", nullable = false)
@@ -45,7 +42,7 @@ public class Account implements Serializable {
 
     }
 
-    public Account(Long id, Long userId, String description, Integer balance, String accountType,
+    public Account(Long id, Long userId, String description, Double balance, String accountType,
                    String accountStatusType, Timestamp createdDate) {
         this.id = id;
         this.userId = userId;
@@ -80,11 +77,11 @@ public class Account implements Serializable {
         this.description = description;
     }
 
-    public Integer getBalance() {
+    public Double getBalance() {
         return balance;
     }
 
-    public void setBalance(Integer balance) {
+    public void setBalance(Double balance) {
         this.balance = balance;
     }
 
@@ -112,29 +109,4 @@ public class Account implements Serializable {
         this.createdDate = createdDate;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Account)) return false;
-        Account account = (Account) o;
-        return getId().equals(account.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return 31;
-    }
-
-    @Override
-    public String toString() {
-        return "Account{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", description='" + description + '\'' +
-                ", balance=" + balance +
-                ", accountType=" + accountType +
-                ", accountStatusType=" + accountStatusType +
-                ", createdDate=" + createdDate +
-                '}';
-    }
 }

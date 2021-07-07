@@ -1,6 +1,6 @@
 package com.banking.api.filters;
 
-import com.banking.api.Constants;
+import com.banking.api.config.Constants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.http.HttpStatus;

@@ -1,5 +1,6 @@
 package com.banking.api.resources;
 
+import com.banking.api.domain.Account;
 import com.banking.api.domain.Customer;
 import com.banking.api.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,5 +73,13 @@ public class CustomerResource {
         Map<String, Boolean> map = new HashMap<>();
         map.put("success", true);
         return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+    @GetMapping("/accounts/{id}")
+    public ResponseEntity<List<Account>> getAllCustomersAccounts(HttpServletRequest request,
+                                                            @PathVariable("id") Long id){
+        Long userId = (Long) request.getAttribute("id");
+        List<Account> account = customerService.fetchAllCustomersAccount(id, userId);
+        return  new ResponseEntity<>(account, HttpStatus.OK);
     }
 }
