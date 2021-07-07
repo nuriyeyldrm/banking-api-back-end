@@ -29,14 +29,26 @@ public class TransferRepositoryImpl implements TransferRepository {
             "new_balance, currency_code, transaction_date, description " +
             "FROM transfers WHERE user_id = ? AND id = ?";
 
-    private static final String SQL_FIND_BY_ID_ACC = "SELECT id, user_id, description, balance, account_type, " +
+    private static final String SQL_FIND_ALL = "SELECT id, from_account_id, to_account_id, user_id, transaction_amount, " +
+            "new_balance, currency_code, transaction_date, description " +
+            "FROM transfers WHERE user_id = ?";
+
+    private static final String SQL_FIND_BY_ID_ACC_TO = "SELECT id, user_id, description, balance, account_type, " +
             "account_status_type, created_date FROM accounts WHERE id = ?";
+
+    private static final String SQL_FIND_BY_ID_ACC_FROM = "SELECT id, user_id, description, balance, account_type, " +
+            "account_status_type, created_date FROM accounts WHERE id = ? AND user_id = ?";
 
     private static final String SQL_UPDATE_ACC_BALANCE = "UPDATE accounts SET balance = ? WHERE id = ?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+
+    @Override
+    public List<Transfer> findAll(Long userId) throws BankResourceNotFoundException {
+        return jdbcTemplate.query(SQL_FIND_ALL, transferRowMapper, userId);
+    }
 
     @Override
     public Transfer findById(Long userId, Long id) throws BankResourceNotFoundException {
@@ -52,7 +64,7 @@ public class TransferRepositoryImpl implements TransferRepository {
                        String currencyCode, Timestamp transactionDate, String description)
             throws BankBadRequestException {
 
-        Double newBalance = transferMoney(transactionAmount, fromAccountId, toAccountId);
+        Double newBalance = transferMoney(transactionAmount, fromAccountId, toAccountId, userId);
 
         try{
             KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -75,9 +87,9 @@ public class TransferRepositoryImpl implements TransferRepository {
         }
     }
 
-    public Double transferMoney(Double transactionAmount, Long fromAccountId, Long toAccountId) {
+    public Double transferMoney(Double transactionAmount, Long fromAccountId, Long toAccountId, Long userId) {
 
-        List<Account> accounts = findAccountById(fromAccountId, toAccountId);
+        List<Account> accounts = findAccountById(fromAccountId, toAccountId, userId);
 
         Account fromAccount = accounts.get(0);
         Account toAccount = accounts.get(1);
@@ -100,19 +112,20 @@ public class TransferRepositoryImpl implements TransferRepository {
 
     }
 
-    public List<Account> findAccountById(Long fromAccountId, Long toAccountId) throws BankResourceNotFoundException{
+    public List<Account> findAccountById(Long fromAccountId, Long toAccountId, Long userId)
+            throws BankResourceNotFoundException{
         try{
-            Account fromAccount = jdbcTemplate.queryForObject(SQL_FIND_BY_ID_ACC, accountRowMapper,
-                    fromAccountId);
+            Account fromAccount = jdbcTemplate.queryForObject(SQL_FIND_BY_ID_ACC_FROM, accountRowMapper,
+                    fromAccountId, userId);
 
-            Account toAccount = jdbcTemplate.queryForObject(SQL_FIND_BY_ID_ACC, accountRowMapper,
+            Account toAccount = jdbcTemplate.queryForObject(SQL_FIND_BY_ID_ACC_TO, accountRowMapper,
                     toAccountId);
             List<Account> accounts = new ArrayList<>();
             accounts.add(fromAccount);
             accounts.add(toAccount);
             return accounts;
         }catch (Exception e){
-            throw new BankResourceNotFoundException("receiver account not found");
+            throw new BankResourceNotFoundException("account not found");
         }
     }
 

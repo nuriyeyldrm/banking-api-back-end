@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Service
 @Transactional
@@ -17,6 +18,11 @@ public class TransferServiceImpl implements TransferService {
 
     @Autowired
     TransferRepository transferRepository;
+
+    @Override
+    public List<Transfer> fetchAllTransfers(Long userId) {
+        return transferRepository.findAll(userId);
+    }
 
     @Override
     public Transfer fetchTransferById(Long userId, Long id) throws BankResourceNotFoundException {
