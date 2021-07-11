@@ -40,6 +40,7 @@ public class BankingApiBackEndApplication {
         registrationBean.addUrlPatterns("/api/employees/*");
         registrationBean.addUrlPatterns("/api/accounts/*");
         registrationBean.addUrlPatterns("/api/transfers/*");
+        registrationBean.addUrlPatterns("/api/users/*");
         return registrationBean;
     }
 
