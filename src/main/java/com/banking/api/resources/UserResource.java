@@ -45,7 +45,7 @@ public class UserResource {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> registerUser(@Valid @RequestBody Map<String, Object> userMap){
+    public ResponseEntity<Map<String, String>> registerUser(@RequestBody Map<String, Object> userMap){
         String firstName = (String) userMap.get("firstName");
         String lastName = (String) userMap.get("lastName");
         String email = (String) userMap.get("email");
