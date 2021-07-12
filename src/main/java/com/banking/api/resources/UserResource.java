@@ -58,7 +58,9 @@ public class UserResource {
         Timestamp lastModifiedDate = new Timestamp(time);
         User user = userService.registerUser(firstName, lastName, email, password, createdBy, createdDate,
                 lastModifiedBy, lastModifiedDate);
-        return new ResponseEntity<>(generateJWTToken(user), HttpStatus.OK);
+        Map<String, String> map = new HashMap<>();
+        map.put("token", "user");
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
