@@ -19,7 +19,7 @@ import java.util.List;
 public class CategoryRepositoryImpl implements CategoryRepository {
 
     private static final String SQL_CREATE = "INSERT INTO categories (category_id, user_id, title, description) " +
-            "VALUES(NEXTVAL('CATEGORIES_SEQ'), ?, ?, ?)";
+            "VALUES(NEXTVAL('sequence_generator'), ?, ?, ?)";
 
     private static final String SQL_FIND_BY_ID = "SELECT c.category_id, c.user_id, c.title, c.description, " +
             "COALESCE(SUM(t.amount), 0) total_expense " +

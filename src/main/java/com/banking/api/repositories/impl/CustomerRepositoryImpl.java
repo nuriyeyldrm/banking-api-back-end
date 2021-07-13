@@ -24,7 +24,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     private static final String SQL_CREATE = "INSERT INTO customers (id, user_id, first_name, last_name, " +
             "middle_initial, email, mobile_phone_number, phone_number, zip_code, address, state, city, country," +
             "ssn, created_date) " +
-            "VALUES(NEXTVAL('CUSTOMERS_SEQ'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "VALUES(NEXTVAL('sequence_generator'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String SQL_FIND_BY_ID = "SELECT id, user_id, first_name, last_name, middle_initial, " +
             "email, mobile_phone_number, phone_number, zip_code, address, state, country, city, ssn, created_date " +

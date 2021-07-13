@@ -19,7 +19,7 @@ import java.util.List;
 public class TransactionRepositoryImpl implements TransactionRepository {
 
     private static final String SQL_CREATE = "INSERT INTO transactions(transaction_id, category_id, user_id, " +
-            "amount, note, transaction_date) VALUES(NEXTVAL('TRANSACTIONS_SEQ'), ?, ?, ?, ?, ?)";
+            "amount, note, transaction_date) VALUES(NEXTVAL('sequence_generator'), ?, ?, ?, ?, ?)";
 
     private static final String SQL_FIND_BY_ID = "SELECT transaction_id, category_id, user_id, amount, note, " +
             "transaction_date FROM transactions WHERE user_id = ? AND category_id = ? AND transaction_id = ?";

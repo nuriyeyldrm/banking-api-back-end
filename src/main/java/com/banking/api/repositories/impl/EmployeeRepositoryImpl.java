@@ -23,7 +23,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
     private static final String SQL_CREATE = "INSERT INTO employees (id, user_id, first_name, last_name, " +
             "email, hired_date, mobile_phone_number, phone_number, zip_code, address, state, city, country," +
             "ssn, created_date) " +
-            "VALUES(NEXTVAL('EMPLOYEES_SEQ'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "VALUES(NEXTVAL('sequence_generator'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String SQL_FIND_BY_ID = "SELECT id, user_id, first_name, last_name, email, hired_date, " +
             "mobile_phone_number, phone_number, zip_code, address, state, city, country, ssn, created_date " +

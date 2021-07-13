@@ -22,7 +22,7 @@ import java.util.List;
 public class AccountRepositoryImpl implements AccountRepository {
 
     private static final String SQL_CREATE = "INSERT INTO accounts (id, user_id, description, balance, account_type, " +
-            "account_status_type, created_date) VALUES(NEXTVAL('ACCOUNTS_SEQ'), ?, ?, ?, ?, ?, ?)";
+            "account_status_type, created_date) VALUES(NEXTVAL('sequence_generator'), ?, ?, ?, ?, ?, ?)";
 
     private static final String SQL_FIND_BY_ID = "SELECT id, user_id, description, balance, account_type, " +
             "account_status_type, created_date FROM accounts WHERE user_id = ? AND id = ?";

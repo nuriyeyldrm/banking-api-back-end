@@ -23,7 +23,7 @@ public class TransferRepositoryImpl implements TransferRepository {
 
     private static final String SQL_CREATE = "INSERT INTO transfers (id, from_account_id, to_account_id, user_id, " +
             "transaction_amount, new_balance, currency_code, transaction_date, description) " +
-            "VALUES(NEXTVAL('TRANSFERS_SEQ'), ?, ?, ?, ?, ?, ?, ?, ?)";
+            "VALUES(NEXTVAL('sequence_generator'), ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String SQL_FIND_BY_ID = "SELECT id, from_account_id, to_account_id, user_id, transaction_amount, " +
             "new_balance, currency_code, transaction_date, description " +
