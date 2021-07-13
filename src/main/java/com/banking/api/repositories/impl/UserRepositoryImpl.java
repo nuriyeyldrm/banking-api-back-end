@@ -23,15 +23,15 @@ import java.util.List;
 @Repository
 public class UserRepositoryImpl implements UserRepository {
 
-    private static final String SQL_CREATE = "INSERT INTO d8lpkvhcu4tdik.public.users(id, first_name, last_name, email, password_hash, " +
+    private static final String SQL_CREATE = "INSERT INTO users(id, first_name, last_name, email, password_hash, " +
             "created_by, created_date, last_modified_by, last_modified_date) " +
             "VALUES(NEXTVAL('USERS_SEQ'), ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    private static final String SQL_COUNT_BY_EMAIL = "SELECT COUNT(*) FROM d8lpkvhcu4tdik.public.users WHERE email = ?";
+    private static final String SQL_COUNT_BY_EMAIL = "SELECT COUNT(*) FROM users WHERE email = ?";
 
     private static final String SQL_FIND_BY_ID = "SELECT id, first_name, last_name, email, password_hash, " +
             "created_by, created_date, last_modified_by, last_modified_date " +
-            "FROM d8lpkvhcu4tdik.public.users WHERE id = ?";
+            "FROM users WHERE id = ?";
 
     private static final String SQL_FIND_BY_EMAIL = "SELECT id, first_name, last_name, email, password_hash, " +
             "created_by, created_date, last_modified_by, last_modified_date " +
