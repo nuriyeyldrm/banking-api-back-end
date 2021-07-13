@@ -22,6 +22,10 @@ public class BankingApiBackEndApplication {
         FilterRegistrationBean<CorsFilter> registrationBean = new FilterRegistrationBean<>();
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedMethod("GET");
+        config.addAllowedMethod("POST");
+        config.addAllowedMethod("PUT");
+        config.addAllowedMethod("DELETE");
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         source.registerCorsConfiguration("/**", config);
