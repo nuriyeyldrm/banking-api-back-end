@@ -25,7 +25,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     private static final String SQL_CREATE = "INSERT INTO users(id, first_name, last_name, email, password_hash, " +
             "created_by, created_date, last_modified_by, last_modified_date) " +
-            "VALUES(NEXTVAL('SEQUENCE_GENERATOR'), ?, ?, ?, ?, ?, ?, ?, ?)";
+            "VALUES(NEXTVAL('sequence_generator'), ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String SQL_COUNT_BY_EMAIL = "SELECT COUNT(*) FROM users WHERE email = ?";
 
