@@ -30,8 +30,8 @@ public class BankingApiBackEndApplication {
         config.addAllowedMethod("DELETE");
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
-//        source.registerCorsConfiguration("/**", config);
-        source.registerCorsConfiguration("localhost:3000", config);
+        source.registerCorsConfiguration("/**", config);
+//        source.registerCorsConfiguration("localhost:3000", config);
         registrationBean.setFilter(new CorsFilter(source));
         registrationBean.setOrder(0);
         return registrationBean;
