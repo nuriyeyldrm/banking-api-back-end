@@ -31,6 +31,7 @@ public class BankingApiBackEndApplication {
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         source.registerCorsConfiguration("/**", config);
+        source.registerCorsConfiguration("localhost:3000", config);
         registrationBean.setFilter(new CorsFilter(source));
         registrationBean.setOrder(0);
         return registrationBean;
@@ -54,7 +55,11 @@ public class BankingApiBackEndApplication {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/users/*").allowedOrigins("http://localhost:3000");
+                registry.addMapping("/**")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE")
+                        .allowedHeaders("*")
+                        .allowedOrigins("http://localhost:3000");
+
             }
         };
     }
