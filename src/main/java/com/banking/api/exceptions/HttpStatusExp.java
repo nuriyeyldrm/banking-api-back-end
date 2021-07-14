@@ -1,13 +1,13 @@
 package com.banking.api.exceptions;
 
-public enum HttpStatus {
+public enum HttpStatusExp {
 
     OK(200, "OK");
 
     private final int code;
     private final String reason;
 
-    private HttpStatus(int code, String reason) {
+    private HttpStatusExp(int code, String reason) {
         this.code = code;
         this.reason = reason;
     }

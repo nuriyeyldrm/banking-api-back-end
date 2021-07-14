@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -63,7 +62,7 @@ public class UserResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, Boolean>> updateUser(@PathVariable("id") Long id,
-                                                               @RequestBody User user){
+                                                                @RequestBody User user){
         userService.updateUser(id, user);
         Map<String, Boolean> map = new HashMap<>();
         map.put("success", true);

@@ -1,5 +1,7 @@
 package com.banking.api.domain;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -12,6 +14,8 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
 public class User implements Serializable {
@@ -23,18 +27,18 @@ public class User implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @NotNull
+    @NotNull(message = "first name must not be null")
     @Size(max = 50)
     @Column(name = "first_name", nullable = false, length = 50)
     private String firstname;
 
-    @NotNull
+    @NotNull(message = "last name must not be null")
     @Size(max = 50)
     @Column(name = "last_name", nullable = false, length = 50)
     private String lastname;
 
     @Email
-    @NotNull
+    @NotNull(message = "email must not be null")
     @Size(min = 5, max = 254)
     @Column(name = "email", nullable = false, unique = true)
     private String email;
@@ -45,6 +49,7 @@ public class User implements Serializable {
     private String password;
 
     @CreatedBy
+    @NotNull(message = "created by must not be null")
     @Column(name = "created_by", nullable = false, length = 50, updatable = false)
     private String createdBy;
 
@@ -74,78 +79,6 @@ public class User implements Serializable {
         this.createdBy = createdBy;
         this.createdDate = createdDate;
         this.lastModifiedBy = lastModifiedBy;
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Timestamp getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Timestamp createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public Timestamp getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Timestamp lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 }

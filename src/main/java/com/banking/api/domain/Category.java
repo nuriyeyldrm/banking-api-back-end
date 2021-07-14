@@ -1,9 +1,14 @@
 package com.banking.api.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "categories")
 public class Category implements Serializable {

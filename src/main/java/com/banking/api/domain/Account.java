@@ -1,10 +1,16 @@
 package com.banking.api.domain;
 
+import io.dropwizard.validation.OneOf;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "accounts")
 public class Account implements Serializable {
@@ -23,15 +29,17 @@ public class Account implements Serializable {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @NotNull
+    @NotNull(message = "balance must not be null")
     @Column(name = "balance", nullable = false)
     private Double balance;
 
-    @NotNull
+    @NotNull(message = "account type must not be null")
+    @OneOf({"CHECKING", "SAVING", "CREDIT_CARD", "INVESTING"})
     @Column(name = "account_type", nullable = false)
     private String accountType;
 
-    @NotNull
+    @NotNull(message = "account status type must not be null")
+    @OneOf({"ACTIVE", "SUSPENDED", "CLOSED"})
     @Column(name = "account_status_type", nullable = false)
     private String accountStatusType;
 
@@ -50,62 +58,6 @@ public class Account implements Serializable {
         this.balance = balance;
         this.accountType = accountType;
         this.accountStatusType = accountStatusType;
-        this.createdDate = createdDate;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(Double balance) {
-        this.balance = balance;
-    }
-
-    public String getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(String accountType) {
-        this.accountType = accountType;
-    }
-
-    public String getAccountStatusType() {
-        return accountStatusType;
-    }
-
-    public void setAccountStatusType(String accountStatusType) {
-        this.accountStatusType = accountStatusType;
-    }
-
-    public Timestamp getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
 

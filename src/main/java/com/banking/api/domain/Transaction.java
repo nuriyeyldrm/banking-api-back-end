@@ -1,9 +1,14 @@
 package com.banking.api.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "transactions")
 public class Transaction implements Serializable {
@@ -44,54 +49,6 @@ public class Transaction implements Serializable {
         this.userId = userId;
         this.amount = amount;
         this.note = note;
-        this.transactionDate = transactionDate;
-    }
-
-    public Integer getTransactionId() {
-        return transactionId;
-    }
-
-    public void setTransactionId(Integer transactionId) {
-        this.transactionId = transactionId;
-    }
-
-    public Integer getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Integer categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public Long getTransactionDate() {
-        return transactionDate;
-    }
-
-    public void setTransactionDate(Long transactionDate) {
         this.transactionDate = transactionDate;
     }
 }
