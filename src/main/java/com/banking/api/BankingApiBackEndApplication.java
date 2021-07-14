@@ -30,7 +30,7 @@ public class BankingApiBackEndApplication {
         config.addAllowedMethod("DELETE");
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
-        source.registerCorsConfiguration("/**", config);
+//        source.registerCorsConfiguration("/**", config);
         source.registerCorsConfiguration("localhost:3000", config);
         registrationBean.setFilter(new CorsFilter(source));
         registrationBean.setOrder(0);
@@ -50,18 +50,18 @@ public class BankingApiBackEndApplication {
         return registrationBean;
     }
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")
-                        .allowedHeaders("*")
-                        .allowedOrigins("http://localhost:3000");
-
-            }
-        };
-    }
+//    @Bean
+//    public WebMvcConfigurer corsConfigurer() {
+//        return new WebMvcConfigurer() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//                registry.addMapping("/**")
+//                        .allowedMethods("GET", "POST", "PUT", "DELETE")
+//                        .allowedHeaders("*")
+//                        .allowedOrigins("http://localhost:3000");
+//
+//            }
+//        };
+//    }
 
 }
