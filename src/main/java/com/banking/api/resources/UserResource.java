@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@Produces(MediaType.APPLICATION_JSON)
 @RequestMapping("/api/users")
 public class UserResource {
 
