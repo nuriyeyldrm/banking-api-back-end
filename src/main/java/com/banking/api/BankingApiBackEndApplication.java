@@ -19,23 +19,22 @@ public class BankingApiBackEndApplication {
         SpringApplication.run(BankingApiBackEndApplication.class, args);
     }
 
-//    @Bean
-//    public FilterRegistrationBean<CorsFilter> corsFilter() {
-//        FilterRegistrationBean<CorsFilter> registrationBean = new FilterRegistrationBean<>();
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        CorsConfiguration config = new CorsConfiguration();
-//        config.addAllowedMethod("GET");
-//        config.addAllowedMethod("POST");
-//        config.addAllowedMethod("PUT");
-//        config.addAllowedMethod("DELETE");
-//        config.addAllowedOrigin("*");
-//        config.addAllowedHeader("*");
-//        source.registerCorsConfiguration("/**", config);
-//        source.registerCorsConfiguration("http://localhost:3000", config);
-//        registrationBean.setFilter(new CorsFilter(source));
-//        registrationBean.setOrder(0);
-//        return registrationBean;
-//    }
+    @Bean
+    public FilterRegistrationBean<CorsFilter> corsFilter() {
+        FilterRegistrationBean<CorsFilter> registrationBean = new FilterRegistrationBean<>();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedMethod("GET");
+        config.addAllowedMethod("POST");
+        config.addAllowedMethod("PUT");
+        config.addAllowedMethod("DELETE");
+        config.addAllowedOrigin("*");
+        config.addAllowedHeader("*");
+        source.registerCorsConfiguration("/**", config);
+        registrationBean.setFilter(new CorsFilter(source));
+        registrationBean.setOrder(0);
+        return registrationBean;
+    }
 
     @Bean
     public FilterRegistrationBean<AuthFilter> filterFilterRegistrationBean(){
@@ -50,18 +49,18 @@ public class BankingApiBackEndApplication {
         return registrationBean;
     }
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")
-                        .allowedHeaders("*")
-                        .allowedOrigins("http://localhost:3000");
-
-            }
-        };
-    }
+//    @Bean
+//    public WebMvcConfigurer corsConfigurer() {
+//        return new WebMvcConfigurer() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//                registry.addMapping("/**")
+//                        .allowedMethods("GET", "POST", "PUT", "DELETE")
+//                        .allowedHeaders("*")
+//                        .allowedOrigins("http://localhost:3000");
+//
+//            }
+//        };
+//    }
 
 }
