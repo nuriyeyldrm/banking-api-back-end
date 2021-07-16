@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.sql.Timestamp;
@@ -40,33 +41,46 @@ public class UserResource {
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> loginUser(@RequestBody Map<String, Object> userMap){
-        String email = (String) userMap.get("email");
+        String ssn = (String) userMap.get("ssn");
         String password = (String) userMap.get("password");
-        User user = userService.validateUser(email, password);
+        User user = userService.validateUser(ssn, password);
         return new ResponseEntity<>(generateJWTToken(user), HttpStatus.OK);
     }
 
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> registerUser(@RequestBody Map<String, Object> userMap){
+        String ssn = (String) userMap.get("ssn");
         String firstName = (String) userMap.get("firstName");
         String lastName = (String) userMap.get("lastName");
         String email = (String) userMap.get("email");
         String password = (String) userMap.get("password");
-        String createdBy = (String) userMap.get("createdBy");
-        String lastModifiedBy = createdBy;
+        String address = (String) userMap.get("address");
+        String mobilePhoneNumber = (String) userMap.get("mobilePhoneNumber");
+        String createdBy = firstName + " " + lastName;
+        String lastModifiedBy = firstName + " " + lastName;
         Date date= new Date();
         long time = date.getTime();
         Timestamp createdDate = new Timestamp(time);
         Timestamp lastModifiedDate = new Timestamp(time);
-        User user = userService.registerUser(firstName, lastName, email, password, createdBy, createdDate,
-                lastModifiedBy, lastModifiedDate);
+        User user = userService.registerUser(ssn, firstName, lastName, email, password, address, mobilePhoneNumber,
+                createdBy, createdDate, lastModifiedBy, lastModifiedDate);
         return new ResponseEntity<>(generateJWTToken(user), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, Boolean>> updateUser(@PathVariable("id") Long id,
-                                                                @RequestBody User user){
+                                                               @Valid @RequestBody User user){
         userService.updateUser(id, user);
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("success", true);
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+    @PutMapping("/password/{id}")
+    public ResponseEntity<Map<String, Boolean>> updatePassword(@PathVariable("id") Long id,
+                                                            @RequestBody Map<String, Object> userMap){
+        String password = (String) userMap.get("password");
+        userService.updatePassword(id, password);
         Map<String, Boolean> map = new HashMap<>();
         map.put("success", true);
         return new ResponseEntity<>(map, HttpStatus.OK);
@@ -86,12 +100,13 @@ public class UserResource {
                 .setIssuedAt(new Date(timestamp))
                 .setExpiration(new Date(timestamp + Constants.TOKEN_VALIDITY))
                 .claim("id", user.getId())
+                .claim("snn", user.getSsn())
                 .claim("email", user.getEmail())
                 .claim("firstName", user.getFirstname())
                 .claim("lastName", user.getLastname())
                 .compact();
         Map<String, String> map = new HashMap<>();
-        map.put("token", token);
+        map.put("id_token", token);
         return map;
     }
 }

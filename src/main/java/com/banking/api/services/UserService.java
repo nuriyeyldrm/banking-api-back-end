@@ -10,16 +10,19 @@ import java.util.List;
 
 public interface UserService {
 
-    User validateUser(String email, String password) throws BankAuthException;
+    User validateUser(String ssn, String password) throws BankAuthException;
 
-    User registerUser(String firstname, String lastname, String email, String password, String createdBy,
-                      Timestamp createdDate, String lastModifiedBy, Timestamp lastModifiedDate) throws BankAuthException;
+    User registerUser(String ssn, String firstName, String lastName, String email, String password, String address,
+                      String mobilePhoneNumber, String createdBy, Timestamp createdDate, String lastModifiedBy,
+                      Timestamp lastModifiedDate) throws BankAuthException;
 
     List<User> fetchAllUsers();
 
     User fetchUserById(Long id) throws BankResourceNotFoundException;
 
     void updateUser(Long id, User user) throws BankBadRequestException;
+
+    void updatePassword(Long id, String password) throws BankBadRequestException;
 
     void removeUser(Long id) throws BankResourceNotFoundException;
 }

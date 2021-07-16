@@ -24,17 +24,15 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
     @Override
-    public User validateUser(String email, String password) throws BankAuthException {
+    public User validateUser(String ssn, String password) throws BankAuthException {
 
-        if (email != null)
-            email = email.toLowerCase();
-        return userRepository.findByEmailAndPassword(email, password);
+        return userRepository.findByEmailAndPassword(ssn, password);
     }
 
     @Override
-    public User registerUser(String firstname, String lastname, String email, String password, String createdBy,
-                             Timestamp createdDate, String lastModifiedBy, Timestamp lastModifiedDate)
-            throws BankAuthException {
+    public User registerUser(String ssn, String firstName, String lastName, String email, String password,
+                             String address, String mobilePhoneNumber, String createdBy, Timestamp createdDate,
+                             String lastModifiedBy, Timestamp lastModifiedDate) throws BankAuthException {
 
         // Convert email to lowercase  sensitive
         Pattern pattern = Pattern.compile("^(.+)@(.+)$");
@@ -44,12 +42,21 @@ public class UserServiceImpl implements UserService {
         if (!pattern.matcher(email).matches())
             throw new BankAuthException("Invalid email format");
 
+        Pattern pattern1 = Pattern.compile("^(?!000|666)[0-8][0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$");
+
+        if (!pattern1.matcher(ssn).matches())
+            throw new BankAuthException("Invalid SSN format");
+
         Integer count = userRepository.getCountByEmail(email);
         if(count > 0)
             throw new BankAuthException("Email already in use");
 
-        Long id = userRepository.create(firstname, lastname, email, password, createdBy, createdDate,
-                lastModifiedBy, lastModifiedDate);
+        Integer count1 = userRepository.getCountBySSN(ssn);
+        if(count1 > 0)
+            throw new BankAuthException("SSN already in use");
+
+        Long id = userRepository.create(ssn, firstName, lastName, email, password, address, mobilePhoneNumber,
+                createdBy, createdDate, lastModifiedBy, lastModifiedDate);
         return userRepository.findById(id);
     }
 
@@ -67,6 +74,11 @@ public class UserServiceImpl implements UserService {
     public void updateUser(Long id, User user)
             throws BankBadRequestException {
         userRepository.update(id, user);
+    }
+
+    @Override
+    public void updatePassword(Long id, String password) throws BankBadRequestException {
+        userRepository.updatePassword(id, password);
     }
 
     @Override

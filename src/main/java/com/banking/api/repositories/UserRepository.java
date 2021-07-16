@@ -10,19 +10,25 @@ import java.util.List;
 
 public interface UserRepository {
 
-    Long create(String firstName, String lastName, String email, String password, String createdBy,
-                Timestamp createdDate, String lastModifiedBy, Timestamp lastModifiedDate) throws BankAuthException;
+    Long create(String ssn, String firstName, String lastName, String email, String password, String address,
+                String mobilePhoneNumber, String createdBy, Timestamp createdDate, String lastModifiedBy,
+                Timestamp lastModifiedDate) throws BankAuthException;
 
-    User findByEmailAndPassword(String email, String password) throws BankAuthException;
+    User findByEmailAndPassword(String ssn, String password) throws BankAuthException;
 
     // check email is already in use or not
     Integer getCountByEmail(String email);
+
+    // check email is already in use or not
+    Integer getCountBySSN(String ssn);
 
     User findById(Long id) throws BankResourceNotFoundException;
 
     List<User> findAll() throws BankResourceNotFoundException;
 
     void update(Long id, User user) throws BankBadRequestException;
+
+    void updatePassword(Long id, String password) throws BankBadRequestException;
 
     void removeById(Long id)  throws BankResourceNotFoundException;
 

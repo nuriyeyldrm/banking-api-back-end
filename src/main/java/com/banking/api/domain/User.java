@@ -27,6 +27,11 @@ public class User implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
+    @Size(max = 11)
+    @NotNull(message = "ssn must not be null")
+    @Column(name = "ssn", nullable = false, unique=true, length = 11)
+    private String ssn;
+
     @NotNull(message = "first name must not be null")
     @Size(max = 50)
     @Column(name = "first_name", nullable = false, length = 50)
@@ -40,17 +45,24 @@ public class User implements Serializable {
     @Email
     @NotNull(message = "email must not be null")
     @Size(min = 5, max = 254)
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true, length = 254)
     private String email;
 
-    @NotNull
-    @Size(min = 60, max = 60)
+    @NotNull(message = "password must not be null")
+    @Size(min = 4, max = 60)
     @Column(name = "password_hash", nullable = false, length = 60)
     private String password;
 
+    @NotNull(message = "address must not be null")
+    @Column(name = "address", nullable = false)
+    private String address;
+
+    @NotNull(message = "mobile phone number must not be null")
+    @Column(name = "mobile_phone_number", nullable = false)
+    private String mobilePhoneNumber;
+
     @CreatedBy
-    @NotNull(message = "created by must not be null")
-    @Column(name = "created_by", nullable = false, length = 50, updatable = false)
+    @Column(name = "created_by", length = 50, updatable = false)
     private String createdBy;
 
     @CreatedDate
@@ -65,17 +77,21 @@ public class User implements Serializable {
     @Column(name = "last_modified_date")
     private Timestamp lastModifiedDate;
 
-    public User(){
+    public User() {
 
     }
 
-    public User(Long id, String firstname, String lastname, String email, String password, String createdBy,
-                Timestamp createdDate, String lastModifiedBy, Timestamp lastModifiedDate) {
+    public User(Long id, String ssn, String firstname, String lastname, String email, String password, String address,
+                String mobilePhoneNumber, String createdBy, Timestamp createdDate, String lastModifiedBy,
+                Timestamp lastModifiedDate) {
         this.id = id;
+        this.ssn = ssn;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.password = password;
+        this.address = address;
+        this.mobilePhoneNumber = mobilePhoneNumber;
         this.createdBy = createdBy;
         this.createdDate = createdDate;
         this.lastModifiedBy = lastModifiedBy;

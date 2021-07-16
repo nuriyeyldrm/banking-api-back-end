@@ -23,27 +23,31 @@ import java.util.List;
 @Repository
 public class UserRepositoryImpl implements UserRepository {
 
-    private static final String SQL_CREATE = "INSERT INTO users(id, first_name, last_name, email, password_hash, " +
-            "created_by, created_date, last_modified_by, last_modified_date) " +
-            "VALUES(NEXTVAL('sequence_generator'), ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String SQL_CREATE = "INSERT INTO users(id, ssn, first_name, last_name, email, password_hash, " +
+            "address, mobile_phone_number, created_by, created_date, last_modified_by, last_modified_date) " +
+            "VALUES(NEXTVAL('sequence_generator'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String SQL_COUNT_BY_EMAIL = "SELECT COUNT(*) FROM users WHERE email = ?";
 
-    private static final String SQL_FIND_BY_ID = "SELECT id, first_name, last_name, email, password_hash, " +
-            "created_by, created_date, last_modified_by, last_modified_date " +
+    private static final String SQL_COUNT_BY_SSN = "SELECT COUNT(*) FROM users WHERE ssn = ?";
+
+    private static final String SQL_FIND_BY_ID = "SELECT id, ssn, first_name, last_name, email, password_hash, " +
+            "address, mobile_phone_number, created_by, created_date, last_modified_by, last_modified_date " +
             "FROM users WHERE id = ?";
 
-    private static final String SQL_FIND_BY_EMAIL = "SELECT id, first_name, last_name, email, password_hash, " +
-            "created_by, created_date, last_modified_by, last_modified_date " +
-            "FROM users WHERE email = ?";
+    private static final String SQL_FIND_BY_SSN = "SELECT id, ssn, first_name, last_name, email, password_hash, " +
+            "address, mobile_phone_number, created_by, created_date, last_modified_by, last_modified_date " +
+            "FROM users WHERE ssn = ?";
 
-    private static final String SQL_FIND_ALL = "SELECT id, first_name, last_name, email, password_hash, " +
-            "created_by, created_date, last_modified_by, last_modified_date " +
+    private static final String SQL_FIND_ALL = "SELECT id, ssn, first_name, last_name, email, password_hash, " +
+            "address, mobile_phone_number, created_by, created_date, last_modified_by, last_modified_date " +
             "FROM users";
 
-    private static final String SQL_UPDATE = "UPDATE users SET first_name = ?, last_name = ?, email = ?, " +
-            "password_hash = ?, last_modified_by = ?, last_modified_date = ? " +
+    private static final String SQL_UPDATE = "UPDATE users SET ssn = ?, first_name = ?, last_name = ?, email = ?, " +
+            "password_hash = ?, address = ?, mobile_phone_number = ?, last_modified_by = ?, last_modified_date = ? " +
             "WHERE id = ?";
+
+    private static final String SQL_UPDATE_PASSWORD = "UPDATE users SET  password_hash = ? WHERE id = ?";
 
     private static final String SQL_DELETE = "DELETE FROM users WHERE id = ?";
 
@@ -51,8 +55,9 @@ public class UserRepositoryImpl implements UserRepository {
     JdbcTemplate jdbcTemplate;
 
     @Override
-    public Long create(String firstName, String lastName, String email, String password, String createdBy,
-                       Timestamp createdDate, String lastModifiedBy, Timestamp lastModifiedDate) throws BankAuthException {
+    public Long create(String ssn, String firstName, String lastName, String email, String password, String address,
+                       String mobilePhoneNumber, String createdBy, Timestamp createdDate, String lastModifiedBy,
+                       Timestamp lastModifiedDate) throws BankAuthException {
 
         // If user enter same password hashes will be different
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(10));
@@ -60,14 +65,17 @@ public class UserRepositoryImpl implements UserRepository {
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(connection -> {
                 PreparedStatement ps = connection.prepareStatement(SQL_CREATE, Statement.RETURN_GENERATED_KEYS);
-                ps.setString(1, firstName);
-                ps.setString(2, lastName);
-                ps.setString(3, email);
-                ps.setString(4, hashedPassword);
-                ps.setString(5, createdBy);
-                ps.setTimestamp(6, createdDate);
-                ps.setString(7, lastModifiedBy);
-                ps.setTimestamp(8, lastModifiedDate);
+                ps.setString(1, ssn);
+                ps.setString(2, firstName);
+                ps.setString(3, lastName);
+                ps.setString(4, email);
+                ps.setString(5, hashedPassword);
+                ps.setString(6, address);
+                ps.setString(7, mobilePhoneNumber);
+                ps.setString(8, createdBy);
+                ps.setTimestamp(9, createdDate);
+                ps.setString(10, lastModifiedBy);
+                ps.setTimestamp(11, lastModifiedDate);
                 return ps;
             }, keyHolder);
             return (Long) keyHolder.getKeys().get("id");
@@ -77,20 +85,25 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User findByEmailAndPassword(String email, String password) throws BankAuthException {
+    public User findByEmailAndPassword(String ssn, String password) throws BankAuthException {
         try {
-            User user = jdbcTemplate.queryForObject(SQL_FIND_BY_EMAIL, userRowMapper, email);
+            User user = jdbcTemplate.queryForObject(SQL_FIND_BY_SSN, userRowMapper, ssn);
             if (!BCrypt.checkpw(password, user.getPassword()))
-                throw new BankAuthException("Invalid email/password");
+                throw new BankAuthException("Invalid ssn/password");
             return user;
         }catch (EmptyResultDataAccessException e){
-            throw new BankAuthException("Invalid email/password");
+            throw new BankAuthException("Invalid ssn/password");
         }
     }
 
     @Override
     public Integer getCountByEmail(String email) {
         return jdbcTemplate.queryForObject(SQL_COUNT_BY_EMAIL, Integer.class, email);
+    }
+
+    @Override
+    public Integer getCountBySSN(String ssn) {
+        return jdbcTemplate.queryForObject(SQL_COUNT_BY_SSN, Integer.class, ssn);
     }
 
     @Override
@@ -108,11 +121,23 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             Date date= new Date();
             long time = date.getTime();
-            Timestamp createdDate = new Timestamp(time);
-            user.setLastModifiedDate(createdDate);
+            Timestamp lastModifiedDate = new Timestamp(time);
+            user.setLastModifiedDate(lastModifiedDate);
+            user.setLastModifiedBy(user.getFirstname() + " " + user.getLastname());
             String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(10));
-            jdbcTemplate.update(SQL_UPDATE, user.getFirstname(), user.getLastname(), user.getEmail(), hashedPassword,
-                    user.getLastModifiedBy(), user.getLastModifiedDate(), id);
+            jdbcTemplate.update(SQL_UPDATE, user.getSsn(), user.getFirstname(), user.getLastname(), user.getEmail(),
+                    hashedPassword, user.getAddress(), user.getMobilePhoneNumber(), user.getLastModifiedBy(),
+                    user.getLastModifiedDate(), id);
+        }catch (Exception e){
+            throw new BankBadRequestException("Invalid request");
+        }
+    }
+
+    @Override
+    public void updatePassword(Long id, String password) throws BankBadRequestException {
+        try {
+            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(10));
+            jdbcTemplate.update(SQL_UPDATE_PASSWORD, hashedPassword,  id);
         }catch (Exception e){
             throw new BankBadRequestException("Invalid request");
         }
@@ -127,10 +152,13 @@ public class UserRepositoryImpl implements UserRepository {
 
     private RowMapper<User> userRowMapper = ((rs, rowNum) -> {
        return new User(rs.getLong("id"),
+               rs.getString("ssn"),
                rs.getString("first_name"),
                rs.getString("last_name"),
                rs.getString("email"),
                rs.getString("password_hash"),
+               rs.getString("address"),
+               rs.getString("mobile_phone_number"),
                rs.getString("created_by"),
                rs.getTimestamp("created_date"),
                rs.getString("last_modified_by"),
