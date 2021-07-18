@@ -57,7 +57,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Long create(String ssn, String firstName, String lastName, String email, String password, String address,
                        String mobilePhoneNumber, String createdBy, Timestamp createdDate, String lastModifiedBy,
-                       Timestamp lastModifiedDate) throws BankAuthException {
+                       Timestamp lastModifiedDate) throws BankBadRequestException {
 
         // If user enter same password hashes will be different
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(10));
@@ -80,7 +80,7 @@ public class UserRepositoryImpl implements UserRepository {
             }, keyHolder);
             return (Long) keyHolder.getKeys().get("id");
         }catch (Exception e) {
-            throw new BankAuthException("Invalid details. Failed to create account");
+            throw new BankBadRequestException("invalid_details");
         }
     }
 
@@ -89,10 +89,10 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             User user = jdbcTemplate.queryForObject(SQL_FIND_BY_SSN, userRowMapper, ssn);
             if (!BCrypt.checkpw(password, user.getPassword()))
-                throw new BankAuthException("Invalid ssn/password");
+                throw new BankBadRequestException("invalid_credentials");
             return user;
         }catch (EmptyResultDataAccessException e){
-            throw new BankAuthException("Invalid ssn/password");
+            throw new BankBadRequestException("invalid_credentials");
         }
     }
 
@@ -129,7 +129,7 @@ public class UserRepositoryImpl implements UserRepository {
                     hashedPassword, user.getAddress(), user.getMobilePhoneNumber(), user.getLastModifiedBy(),
                     user.getLastModifiedDate(), id);
         }catch (Exception e){
-            throw new BankBadRequestException("Invalid request");
+            throw new BankBadRequestException("invalid_request");
         }
     }
 
@@ -139,7 +139,7 @@ public class UserRepositoryImpl implements UserRepository {
             String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(10));
             jdbcTemplate.update(SQL_UPDATE_PASSWORD, hashedPassword,  id);
         }catch (Exception e){
-            throw new BankBadRequestException("Invalid request");
+            throw new BankBadRequestException("invalid_request");
         }
     }
 
@@ -147,7 +147,7 @@ public class UserRepositoryImpl implements UserRepository {
     public void removeById(Long id) throws BankResourceNotFoundException {
         int count = jdbcTemplate.update(SQL_DELETE, id);
         if (count == 0)
-            throw new BankResourceNotFoundException("User not found");
+            throw new BankResourceNotFoundException("user_not_found");
     }
 
     private RowMapper<User> userRowMapper = ((rs, rowNum) -> {

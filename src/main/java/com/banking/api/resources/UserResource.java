@@ -10,13 +10,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -27,14 +27,15 @@ public class UserResource {
     @Autowired
     UserService userService;
 
-    @GetMapping(" ")
-    public ResponseEntity<List<User>> getAllUsers(){
-        List<User> users = userService.fetchAllUsers();
-        return new ResponseEntity<>(users, HttpStatus.OK);
-    }
+//    @GetMapping(" ")
+//    public ResponseEntity<List<User>> getAllUsers(){
+//        List<User> users = userService.fetchAllUsers();
+//        return new ResponseEntity<>(users, HttpStatus.OK);
+//    }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") Long id){
+    @GetMapping("/auth")
+    public ResponseEntity<User> getUserById(HttpServletRequest request){
+        Long id = (Long) request.getAttribute("id");
         User user = userService.fetchUserById(id);
         return  new ResponseEntity<>(user, HttpStatus.OK);
     }
@@ -48,7 +49,7 @@ public class UserResource {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> registerUser(@RequestBody Map<String, Object> userMap){
+    public ResponseEntity<Map<String, Boolean>> registerUser(@RequestBody Map<String, Object> userMap){
         String ssn = (String) userMap.get("ssn");
         String firstName = (String) userMap.get("firstName");
         String lastName = (String) userMap.get("lastName");
@@ -64,21 +65,25 @@ public class UserResource {
         Timestamp lastModifiedDate = new Timestamp(time);
         User user = userService.registerUser(ssn, firstName, lastName, email, password, address, mobilePhoneNumber,
                 createdBy, createdDate, lastModifiedBy, lastModifiedDate);
-        return new ResponseEntity<>(generateJWTToken(user), HttpStatus.OK);
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("success", true);
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Map<String, Boolean>> updateUser(@PathVariable("id") Long id,
+    @PutMapping("/auth")
+    public ResponseEntity<Map<String, Boolean>> updateUser(HttpServletRequest request,
                                                                @Valid @RequestBody User user){
+        Long id = (Long) request.getAttribute("id");
         userService.updateUser(id, user);
         Map<String, Boolean> map = new HashMap<>();
         map.put("success", true);
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
-    @PutMapping("/password/{id}")
-    public ResponseEntity<Map<String, Boolean>> updatePassword(@PathVariable("id") Long id,
+    @PutMapping("/auth/password")
+    public ResponseEntity<Map<String, Boolean>> updatePassword(HttpServletRequest request,
                                                             @RequestBody Map<String, Object> userMap){
+        Long id = (Long) request.getAttribute("id");
         String password = (String) userMap.get("password");
         userService.updatePassword(id, password);
         Map<String, Boolean> map = new HashMap<>();
@@ -86,8 +91,9 @@ public class UserResource {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteUser(@PathVariable("id") Long id){
+    @DeleteMapping("/auth")
+    public ResponseEntity<Map<String, Boolean>> deleteUser(HttpServletRequest request){
+        Long id = (Long) request.getAttribute("id");
         userService.removeUser(id);
         Map<String, Boolean> map = new HashMap<>();
         map.put("success", true);

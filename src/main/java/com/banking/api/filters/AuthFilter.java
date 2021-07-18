@@ -33,17 +33,17 @@ public class AuthFilter extends GenericFilterBean{
                                 .parseClaimsJws(token).getBody();
                         httpRequest.setAttribute("id", Long.parseLong(claims.get("id").toString()));
                     }catch (Exception e){
-                        httpResponse.sendError(HttpStatus.FORBIDDEN.value(), "invalid/expired token");
+                        httpResponse.sendError(HttpStatus.FORBIDDEN.value(), "invalid_or_expired_token");
                         return;
                     }
             }
             else {
-                httpResponse.sendError(HttpStatus.FORBIDDEN.value(), "Authorization token must be Bearer [token]");
+                httpResponse.sendError(HttpStatus.FORBIDDEN.value(), "authorization_token_must_be_Bearer_[token]");
                 return;
             }
         }
         else {
-            httpResponse.sendError(HttpStatus.FORBIDDEN.value(), "Authorization token must be provided");
+            httpResponse.sendError(HttpStatus.FORBIDDEN.value(), "authorization_token_must_be_provided");
             return;
         }
         filterChain.doFilter(servletRequest, servletResponse);

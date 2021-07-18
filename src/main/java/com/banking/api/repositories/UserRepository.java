@@ -12,7 +12,7 @@ public interface UserRepository {
 
     Long create(String ssn, String firstName, String lastName, String email, String password, String address,
                 String mobilePhoneNumber, String createdBy, Timestamp createdDate, String lastModifiedBy,
-                Timestamp lastModifiedDate) throws BankAuthException;
+                Timestamp lastModifiedDate) throws BankBadRequestException;
 
     User findByEmailAndPassword(String ssn, String password) throws BankAuthException;
 

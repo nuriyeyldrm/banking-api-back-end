@@ -14,7 +14,7 @@ public interface UserService {
 
     User registerUser(String ssn, String firstName, String lastName, String email, String password, String address,
                       String mobilePhoneNumber, String createdBy, Timestamp createdDate, String lastModifiedBy,
-                      Timestamp lastModifiedDate) throws BankAuthException;
+                      Timestamp lastModifiedDate) throws BankBadRequestException;
 
     List<User> fetchAllUsers();
 

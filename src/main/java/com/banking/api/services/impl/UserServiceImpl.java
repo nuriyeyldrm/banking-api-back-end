@@ -3,6 +3,7 @@ package com.banking.api.services.impl;
 import com.banking.api.domain.User;
 import com.banking.api.exceptions.BankAuthException;
 import com.banking.api.exceptions.BankBadRequestException;
+import com.banking.api.exceptions.BankConflictException;
 import com.banking.api.exceptions.BankResourceNotFoundException;
 import com.banking.api.repositories.UserRepository;
 import com.banking.api.services.UserService;
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User registerUser(String ssn, String firstName, String lastName, String email, String password,
                              String address, String mobilePhoneNumber, String createdBy, Timestamp createdDate,
-                             String lastModifiedBy, Timestamp lastModifiedDate) throws BankAuthException {
+                             String lastModifiedBy, Timestamp lastModifiedDate) throws BankBadRequestException {
 
         // Convert email to lowercase  sensitive
         Pattern pattern = Pattern.compile("^(.+)@(.+)$");
@@ -40,20 +41,20 @@ public class UserServiceImpl implements UserService {
             email = email.toLowerCase();
 
         if (!pattern.matcher(email).matches())
-            throw new BankAuthException("Invalid email format");
+            throw new BankBadRequestException("invalid_email_format");
 
         Pattern pattern1 = Pattern.compile("^(?!000|666)[0-8][0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$");
 
         if (!pattern1.matcher(ssn).matches())
-            throw new BankAuthException("Invalid SSN format");
+            throw new BankBadRequestException("invalid_SSN_format");
 
         Integer count = userRepository.getCountByEmail(email);
         if(count > 0)
-            throw new BankAuthException("Email already in use");
+            throw new BankConflictException("email_is_already_exists");
 
         Integer count1 = userRepository.getCountBySSN(ssn);
         if(count1 > 0)
-            throw new BankAuthException("SSN already in use");
+            throw new BankConflictException("SSN_is_already_exists");
 
         Long id = userRepository.create(ssn, firstName, lastName, email, password, address, mobilePhoneNumber,
                 createdBy, createdDate, lastModifiedBy, lastModifiedDate);
