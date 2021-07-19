@@ -8,5 +8,6 @@ public class BankAuthException extends RuntimeException{
 
     public BankAuthException(String message){
         super(message);
+
     }
 }
