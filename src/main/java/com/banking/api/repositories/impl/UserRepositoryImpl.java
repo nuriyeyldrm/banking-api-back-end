@@ -1,6 +1,7 @@
 package com.banking.api.repositories.impl;
 
 import com.banking.api.domain.User;
+import com.banking.api.domain.enumeration.AppUserRole;
 import com.banking.api.exceptions.BankAuthException;
 import com.banking.api.exceptions.BankBadRequestException;
 import com.banking.api.exceptions.BankResourceNotFoundException;
@@ -24,24 +25,24 @@ import java.util.List;
 public class UserRepositoryImpl implements UserRepository {
 
     private static final String SQL_CREATE = "INSERT INTO users(id, ssn, first_name, last_name, email, password_hash, " +
-            "address, mobile_phone_number, created_by, created_date, last_modified_by, last_modified_date) " +
-            "VALUES(NEXTVAL('sequence_generator'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "address, mobile_phone_number, created_by, created_date, last_modified_by, last_modified_date, " +
+            "app_user_role) VALUES(NEXTVAL('sequence_generator'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String SQL_COUNT_BY_EMAIL = "SELECT COUNT(*) FROM users WHERE email = ?";
 
     private static final String SQL_COUNT_BY_SSN = "SELECT COUNT(*) FROM users WHERE ssn = ?";
 
     private static final String SQL_FIND_BY_ID = "SELECT id, ssn, first_name, last_name, email, password_hash, " +
-            "address, mobile_phone_number, created_by, created_date, last_modified_by, last_modified_date " +
-            "FROM users WHERE id = ?";
+            "address, mobile_phone_number, created_by, created_date, last_modified_by, last_modified_date, " +
+            "app_user_role FROM users WHERE id = ?";
 
     private static final String SQL_FIND_BY_SSN = "SELECT id, ssn, first_name, last_name, email, password_hash, " +
-            "address, mobile_phone_number, created_by, created_date, last_modified_by, last_modified_date " +
-            "FROM users WHERE ssn = ?";
+            "address, mobile_phone_number, created_by, created_date, last_modified_by, last_modified_date, " +
+            "app_user_role FROM users WHERE ssn = ?";
 
     private static final String SQL_FIND_ALL = "SELECT id, ssn, first_name, last_name, email, password_hash, " +
-            "address, mobile_phone_number, created_by, created_date, last_modified_by, last_modified_date " +
-            "FROM users";
+            "address, mobile_phone_number, created_by, created_date, last_modified_by, last_modified_date, " +
+            "app_user_role FROM users";
 
     private static final String SQL_UPDATE = "UPDATE users SET ssn = ?, first_name = ?, last_name = ?, email = ?, " +
             "password_hash = ?, address = ?, mobile_phone_number = ?, last_modified_by = ?, last_modified_date = ? " +
@@ -76,6 +77,7 @@ public class UserRepositoryImpl implements UserRepository {
                 ps.setTimestamp(9, createdDate);
                 ps.setString(10, lastModifiedBy);
                 ps.setTimestamp(11, lastModifiedDate);
+                ps.setString(12, String.valueOf(AppUserRole.USER));
                 return ps;
             }, keyHolder);
             return (Long) keyHolder.getKeys().get("id");
@@ -162,6 +164,7 @@ public class UserRepositoryImpl implements UserRepository {
                rs.getString("created_by"),
                rs.getTimestamp("created_date"),
                rs.getString("last_modified_by"),
-               rs.getTimestamp("last_modified_date"));
+               rs.getTimestamp("last_modified_date"),
+               AppUserRole.USER);
     });
 }
