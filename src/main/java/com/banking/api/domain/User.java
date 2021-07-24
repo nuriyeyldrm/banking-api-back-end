@@ -80,9 +80,8 @@ public class User implements Serializable {
     @Column(name = "last_modified_date")
     private Timestamp lastModifiedDate;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "app_user_role", length = 50, updatable = false, nullable = false)
+    @Column(name = "app_user_role", length = 50, updatable = false)
     private AppUserRole appUserRole;
 
     public User() {
