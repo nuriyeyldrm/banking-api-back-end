@@ -45,8 +45,7 @@ public class UserRepositoryImpl implements UserRepository {
             "app_user_role FROM users";
 
     private static final String SQL_UPDATE = "UPDATE users SET ssn = ?, first_name = ?, last_name = ?, email = ?, " +
-            "password_hash = ?, address = ?, mobile_phone_number = ?, last_modified_by = ?, last_modified_date = ? " +
-            "WHERE id = ?";
+            "address = ?, mobile_phone_number = ?, last_modified_by = ?, last_modified_date = ? WHERE id = ?";
 
     private static final String SQL_UPDATE_PASSWORD = "UPDATE users SET  password_hash = ? WHERE id = ?";
 
@@ -126,9 +125,8 @@ public class UserRepositoryImpl implements UserRepository {
             Timestamp lastModifiedDate = new Timestamp(time);
             user.setLastModifiedDate(lastModifiedDate);
             user.setLastModifiedBy(user.getFirstname() + " " + user.getLastname());
-            String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(10));
             jdbcTemplate.update(SQL_UPDATE, user.getSsn(), user.getFirstname(), user.getLastname(), user.getEmail(),
-                    hashedPassword, user.getAddress(), user.getMobilePhoneNumber(), user.getLastModifiedBy(),
+                    user.getAddress(), user.getMobilePhoneNumber(), user.getLastModifiedBy(),
                     user.getLastModifiedDate(), id);
         }catch (Exception e){
             throw new BankBadRequestException("invalid_request");

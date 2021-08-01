@@ -75,7 +75,7 @@ public class UserResource {
 
     @PutMapping("/auth")
     public ResponseEntity<Map<String, Boolean>> updateUser(HttpServletRequest request,
-                                                               @Valid @RequestBody User user){
+                                                               @RequestBody User user){
         Long id = (Long) request.getAttribute("id");
         userService.updateUser(id, user);
         Map<String, Boolean> map = new HashMap<>();
@@ -87,7 +87,7 @@ public class UserResource {
     public ResponseEntity<Map<String, Boolean>> updatePassword(HttpServletRequest request,
                                                             @RequestBody Map<String, Object> userMap){
         Long id = (Long) request.getAttribute("id");
-        String old_password = (String) userMap.get("oldPassword");
+        String old_password = (String) userMap.get("currentPassword");
         String new_password = (String) userMap.get("newPassword");
         userService.updatePassword(id, new_password, old_password);
         Map<String, Boolean> map = new HashMap<>();
