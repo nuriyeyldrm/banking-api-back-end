@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 // Service added for automatic bean detection
@@ -48,6 +49,11 @@ public class UserServiceImpl implements UserService {
         if (!pattern1.matcher(ssn).matches())
             throw new BankBadRequestException("invalid_SSN_format");
 
+        Pattern pattern2 = Pattern.compile("^(\\d{3}[- .]?){2}\\d{4}$");
+
+        if (!pattern2.matcher(mobilePhoneNumber).matches())
+            throw new BankBadRequestException("invalid_mobilePhoneNumber_format");
+
         Integer count = userRepository.getCountByEmail(email);
         if(count > 0)
             throw new BankConflictException("email_is_already_exists");
@@ -74,6 +80,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(Long id, User user)
             throws BankBadRequestException {
+
+        Pattern pattern = Pattern.compile("^(.+)@(.+)$");
+        String email = user.getEmail();
+        if (email != null)
+            email = email.toLowerCase();
+
+        if (!pattern.matcher(email).matches())
+            throw new BankBadRequestException("invalid_email_format");
+
+        Pattern pattern1 = Pattern.compile("^(?!000|666)[0-8][0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$");
+
+        String ssn = user.getSsn();
+        if (!pattern1.matcher(ssn).matches())
+            throw new BankBadRequestException("invalid_SSN_format");
+
+        Pattern pattern2 = Pattern.compile("^(\\d{3}[- .]?){2}\\d{4}$");
+
+        String mobilePhoneNumber = user.getMobilePhoneNumber();
+        if (!pattern2.matcher(mobilePhoneNumber).matches())
+            throw new BankBadRequestException("invalid_mobilePhoneNumber_format");
+
         userRepository.update(id, user);
     }
 
