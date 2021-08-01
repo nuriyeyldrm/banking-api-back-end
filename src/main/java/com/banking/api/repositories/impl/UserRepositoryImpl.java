@@ -136,9 +136,10 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void updatePassword(Long id, String password) throws BankBadRequestException {
+    public void updatePassword(Long id, String new_password, String old_password) throws BankBadRequestException {
+        checkPasswordEquity(old_password, id);
         try {
-            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(10));
+            String hashedPassword = BCrypt.hashpw(new_password, BCrypt.gensalt(10));
             jdbcTemplate.update(SQL_UPDATE_PASSWORD, hashedPassword,  id);
         }catch (Exception e){
             throw new BankBadRequestException("invalid_request");
@@ -150,6 +151,13 @@ public class UserRepositoryImpl implements UserRepository {
         int count = jdbcTemplate.update(SQL_DELETE, id);
         if (count == 0)
             throw new BankResourceNotFoundException("user_not_found");
+    }
+
+    public void checkPasswordEquity(String old_password, Long id){
+        User user = jdbcTemplate.queryForObject(SQL_FIND_BY_ID, userRowMapper, id);
+        if (!(BCrypt.hashpw(old_password, user.getPassword()).equals(user.getPassword())))
+            throw new BankBadRequestException("password_does_not_match");
+
     }
 
     private RowMapper<User> userRowMapper = ((rs, rowNum) -> {

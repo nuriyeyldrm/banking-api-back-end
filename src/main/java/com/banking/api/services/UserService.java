@@ -22,7 +22,7 @@ public interface UserService {
 
     void updateUser(Long id, User user) throws BankBadRequestException;
 
-    void updatePassword(Long id, String password) throws BankBadRequestException;
+    void updatePassword(Long id, String new_password, String old_password) throws BankBadRequestException;
 
     void removeUser(Long id) throws BankResourceNotFoundException;
 }

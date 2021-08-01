@@ -2,14 +2,17 @@ package com.banking.api.resources;
 
 import com.banking.api.config.Constants;
 import com.banking.api.domain.User;
+import com.banking.api.exceptions.BankBadRequestException;
 import com.banking.api.services.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.ws.rs.Produces;
@@ -84,8 +87,9 @@ public class UserResource {
     public ResponseEntity<Map<String, Boolean>> updatePassword(HttpServletRequest request,
                                                             @RequestBody Map<String, Object> userMap){
         Long id = (Long) request.getAttribute("id");
-        String password = (String) userMap.get("password");
-        userService.updatePassword(id, password);
+        String old_password = (String) userMap.get("oldPassword");
+        String new_password = (String) userMap.get("newPassword");
+        userService.updatePassword(id, new_password, old_password);
         Map<String, Boolean> map = new HashMap<>();
         map.put("success", true);
         return new ResponseEntity<>(map, HttpStatus.OK);

@@ -78,8 +78,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updatePassword(Long id, String password) throws BankBadRequestException {
-        userRepository.updatePassword(id, password);
+    public void updatePassword(Long id, String new_password, String old_password) throws BankBadRequestException {
+        userRepository.updatePassword(id, new_password, old_password);
     }
 
     @Override

@@ -28,7 +28,7 @@ public interface UserRepository {
 
     void update(Long id, User user) throws BankBadRequestException;
 
-    void updatePassword(Long id, String password) throws BankBadRequestException;
+    void updatePassword(Long id, String new_password, String old_password) throws BankBadRequestException;
 
     void removeById(Long id)  throws BankResourceNotFoundException;
 
