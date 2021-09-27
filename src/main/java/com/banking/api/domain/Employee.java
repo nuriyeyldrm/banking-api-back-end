@@ -1,6 +1,7 @@
 package com.banking.api.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.sql.Timestamp;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "employees")
 public class Employee implements Serializable {
@@ -70,10 +72,6 @@ public class Employee implements Serializable {
 
     @Column(name = "created_date")
     private Timestamp createdDate;
-
-    public Employee(){
-
-    }
 
     public Employee(Long id, Long userId, String firstName, String lastName, String email, Timestamp hiredDate,
                     String mobilePhoneNumber, String phoneNumber, String zipCode, String address, String state,

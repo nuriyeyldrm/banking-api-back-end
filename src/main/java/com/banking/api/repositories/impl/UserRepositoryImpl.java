@@ -6,8 +6,8 @@ import com.banking.api.exceptions.BankAuthException;
 import com.banking.api.exceptions.BankBadRequestException;
 import com.banking.api.exceptions.BankResourceNotFoundException;
 import com.banking.api.repositories.UserRepository;
+import lombok.AllArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -20,7 +20,9 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
+@AllArgsConstructor
 @Repository
 public class UserRepositoryImpl implements UserRepository {
 
@@ -51,8 +53,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     private static final String SQL_DELETE = "DELETE FROM users WHERE id = ?";
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
+
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public Long create(String ssn, String firstName, String lastName, String email, String password, String address,
@@ -79,7 +81,7 @@ public class UserRepositoryImpl implements UserRepository {
                 ps.setString(12, String.valueOf(AppUserRole.USER));
                 return ps;
             }, keyHolder);
-            return (Long) keyHolder.getKeys().get("id");
+            return (Long) Objects.requireNonNull(keyHolder.getKeys()).get("id");
         }catch (Exception e) {
             throw new BankBadRequestException("invalid_details");
         }
@@ -89,6 +91,7 @@ public class UserRepositoryImpl implements UserRepository {
     public User findByEmailAndPassword(String ssn, String password) throws BankAuthException {
         try {
             User user = jdbcTemplate.queryForObject(SQL_FIND_BY_SSN, userRowMapper, ssn);
+            assert user != null;
             if (!BCrypt.checkpw(password, user.getPassword()))
                 throw new BankBadRequestException("invalid_credentials");
             return user;
@@ -153,24 +156,24 @@ public class UserRepositoryImpl implements UserRepository {
 
     public void checkPasswordEquity(String old_password, Long id){
         User user = jdbcTemplate.queryForObject(SQL_FIND_BY_ID, userRowMapper, id);
+        assert user != null;
         if (!(BCrypt.hashpw(old_password, user.getPassword()).equals(user.getPassword())))
             throw new BankBadRequestException("password_does_not_match");
 
     }
 
-    private RowMapper<User> userRowMapper = ((rs, rowNum) -> {
-       return new User(rs.getLong("id"),
-               rs.getString("ssn"),
-               rs.getString("first_name"),
-               rs.getString("last_name"),
-               rs.getString("email"),
-               rs.getString("password_hash"),
-               rs.getString("address"),
-               rs.getString("mobile_phone_number"),
-               rs.getString("created_by"),
-               rs.getTimestamp("created_date"),
-               rs.getString("last_modified_by"),
-               rs.getTimestamp("last_modified_date"),
-               AppUserRole.USER);
-    });
+    private final RowMapper<User> userRowMapper = ((rs, rowNum) -> new User(
+            rs.getLong("id"),
+            rs.getString("ssn"),
+            rs.getString("first_name"),
+            rs.getString("last_name"),
+            rs.getString("email"),
+            rs.getString("password_hash"),
+            rs.getString("address"),
+            rs.getString("mobile_phone_number"),
+            rs.getString("created_by"),
+            rs.getTimestamp("created_date"),
+            rs.getString("last_modified_by"),
+            rs.getTimestamp("last_modified_date"),
+            AppUserRole.USER));
 }

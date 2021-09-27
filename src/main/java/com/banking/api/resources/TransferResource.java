@@ -2,7 +2,7 @@ package com.banking.api.resources;
 
 import com.banking.api.domain.Transfer;
 import com.banking.api.services.TransferService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,12 +13,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/transfers")
 public class TransferResource {
 
-    @Autowired
-    TransferService transferService;
+    private final TransferService transferService;
 
     @GetMapping(" ")
     public ResponseEntity<List<Transfer>> getAllTransfers(HttpServletRequest request){

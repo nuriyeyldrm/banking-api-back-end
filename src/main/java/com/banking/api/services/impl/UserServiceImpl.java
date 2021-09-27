@@ -7,23 +7,20 @@ import com.banking.api.exceptions.BankConflictException;
 import com.banking.api.exceptions.BankResourceNotFoundException;
 import com.banking.api.repositories.UserRepository;
 import com.banking.api.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// Service added for automatic bean detection
+@AllArgsConstructor
 @Service
-// Transactional behaviour to all methods inside this class
 @Transactional
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public User validateUser(String ssn, String password) throws BankAuthException {
@@ -32,7 +29,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User registerUser(String ssn, String firstName, String lastName, String email, String password,
+    public void registerUser(String ssn, String firstName, String lastName, String email, String password,
                              String address, String mobilePhoneNumber, String createdBy, Timestamp createdDate,
                              String lastModifiedBy, Timestamp lastModifiedDate) throws BankBadRequestException {
 
@@ -41,6 +38,7 @@ public class UserServiceImpl implements UserService {
         if (email != null)
             email = email.toLowerCase();
 
+        assert email != null;
         if (!pattern.matcher(email).matches())
             throw new BankBadRequestException("invalid_email_format");
 
@@ -64,7 +62,7 @@ public class UserServiceImpl implements UserService {
 
         Long id = userRepository.create(ssn, firstName, lastName, email, password, address, mobilePhoneNumber,
                 createdBy, createdDate, lastModifiedBy, lastModifiedDate);
-        return userRepository.findById(id);
+        userRepository.findById(id);
     }
 
     @Override
@@ -86,6 +84,7 @@ public class UserServiceImpl implements UserService {
         if (email != null)
             email = email.toLowerCase();
 
+        assert email != null;
         if (!pattern.matcher(email).matches())
             throw new BankBadRequestException("invalid_email_format");
 

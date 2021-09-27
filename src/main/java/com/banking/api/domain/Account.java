@@ -2,6 +2,7 @@ package com.banking.api.domain;
 
 import io.dropwizard.validation.OneOf;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.sql.Timestamp;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "accounts")
 public class Account implements Serializable {
@@ -45,10 +47,6 @@ public class Account implements Serializable {
 
     @Column(name = "created_date", nullable = false)
     private Timestamp createdDate;
-
-    public Account(){
-
-    }
 
     public Account(Long id, Long userId, String description, Double balance, String accountType,
                    String accountStatusType, Timestamp createdDate) {

@@ -2,6 +2,7 @@ package com.banking.api.domain;
 
 import io.dropwizard.validation.OneOf;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import java.sql.Timestamp;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "transfers")
 public class Transfer implements Serializable {
@@ -53,10 +55,6 @@ public class Transfer implements Serializable {
     @NotNull(message = "description must not be null")
     @Column(name = "description", nullable = false)
     private String description;
-
-    public Transfer(){
-
-    }
 
     public Transfer(Long id, Long fromAccountId, Long toAccountId, Long userId, Double transactionAmount,
                     Double newBalance, String currencyCode, Timestamp transactionDate, String description) {

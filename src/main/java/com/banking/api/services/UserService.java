@@ -12,7 +12,7 @@ public interface UserService {
 
     User validateUser(String ssn, String password) throws BankAuthException;
 
-    User registerUser(String ssn, String firstName, String lastName, String email, String password, String address,
+    void registerUser(String ssn, String firstName, String lastName, String email, String password, String address,
                       String mobilePhoneNumber, String createdBy, Timestamp createdDate, String lastModifiedBy,
                       Timestamp lastModifiedDate) throws BankBadRequestException;
 

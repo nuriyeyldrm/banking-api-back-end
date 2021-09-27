@@ -6,19 +6,19 @@ import com.banking.api.exceptions.BankBadRequestException;
 import com.banking.api.exceptions.BankResourceNotFoundException;
 import com.banking.api.repositories.CustomerRepository;
 import com.banking.api.services.CustomerService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
 
+@AllArgsConstructor
 @Service
 @Transactional
 public class CustomerServiceImpl implements CustomerService {
 
-    @Autowired
-    CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
     @Override
     public List<Customer> fetchAllCustomers() {

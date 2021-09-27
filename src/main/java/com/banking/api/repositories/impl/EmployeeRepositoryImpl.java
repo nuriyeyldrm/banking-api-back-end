@@ -1,11 +1,10 @@
 package com.banking.api.repositories.impl;
 
 import com.banking.api.domain.Employee;
-import com.banking.api.domain.User;
 import com.banking.api.exceptions.BankBadRequestException;
 import com.banking.api.exceptions.BankResourceNotFoundException;
 import com.banking.api.repositories.EmployeeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -16,7 +15,9 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 
+@AllArgsConstructor
 @Repository
 public class EmployeeRepositoryImpl implements EmployeeRepository {
 
@@ -39,8 +40,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 
     private static final String SQL_DELETE = "DELETE FROM employees WHERE id = ?";
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public List<Employee> findAll() throws BankResourceNotFoundException {
@@ -80,7 +80,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
                 ps.setTimestamp(14, createdDate);
                 return ps;
             }, keyHolder);
-            return (Long) keyHolder.getKeys().get("id");
+            return (Long) Objects.requireNonNull(keyHolder.getKeys()).get("id");
         }catch (Exception e){
             throw new BankBadRequestException("Invalid Request");
         }
@@ -105,21 +105,20 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
             throw new BankResourceNotFoundException("Employee not found");
     }
 
-    private RowMapper<Employee> employeeRowMapper = ((rs, rowNum) -> {
-        return new Employee(rs.getLong("id"),
-                rs.getLong("user_id"),
-                rs.getString("first_name"),
-                rs.getString("last_name"),
-                rs.getString("email"),
-                rs.getTimestamp("hired_date"),
-                rs.getString("mobile_phone_number"),
-                rs.getString("phone_number"),
-                rs.getString("zip_code"),
-                rs.getString("address"),
-                rs.getString("state"),
-                rs.getString("city"),
-                rs.getString("country"),
-                rs.getString("ssn"),
-                rs.getTimestamp("created_date"));
-    });
+    private final RowMapper<Employee> employeeRowMapper = ((rs, rowNum) -> new Employee(
+            rs.getLong("id"),
+            rs.getLong("user_id"),
+            rs.getString("first_name"),
+            rs.getString("last_name"),
+            rs.getString("email"),
+            rs.getTimestamp("hired_date"),
+            rs.getString("mobile_phone_number"),
+            rs.getString("phone_number"),
+            rs.getString("zip_code"),
+            rs.getString("address"),
+            rs.getString("state"),
+            rs.getString("city"),
+            rs.getString("country"),
+            rs.getString("ssn"),
+            rs.getTimestamp("created_date")));
 }

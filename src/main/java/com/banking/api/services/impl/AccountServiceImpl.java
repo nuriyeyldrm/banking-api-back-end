@@ -1,25 +1,23 @@
 package com.banking.api.services.impl;
 
 import com.banking.api.domain.Account;
-import com.banking.api.domain.enumeration.AccountStatusType;
-import com.banking.api.domain.enumeration.AccountType;
 import com.banking.api.exceptions.BankBadRequestException;
 import com.banking.api.exceptions.BankResourceNotFoundException;
 import com.banking.api.repositories.AccountRepository;
 import com.banking.api.services.AccountService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
 
+@AllArgsConstructor
 @Service
 @Transactional
 public class AccountServiceImpl implements AccountService {
 
-    @Autowired
-    AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
 
     @Override
     public List<Account> fetchAllAccounts(Long userId) {

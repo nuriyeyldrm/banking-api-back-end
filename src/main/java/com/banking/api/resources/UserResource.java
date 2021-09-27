@@ -2,19 +2,15 @@ package com.banking.api.resources;
 
 import com.banking.api.config.Constants;
 import com.banking.api.domain.User;
-import com.banking.api.exceptions.BankBadRequestException;
 import com.banking.api.services.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.sql.Timestamp;
@@ -22,13 +18,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@AllArgsConstructor
 @RestController
 @Produces(MediaType.APPLICATION_JSON)
 @RequestMapping("/api/users")
 public class UserResource {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
 
 //    @GetMapping(" ")
 //    public ResponseEntity<List<User>> getAllUsers(){
@@ -66,7 +62,7 @@ public class UserResource {
         long time = date.getTime();
         Timestamp createdDate = new Timestamp(time);
         Timestamp lastModifiedDate = new Timestamp(time);
-        User user = userService.registerUser(ssn, firstName, lastName, email, password, address, mobilePhoneNumber,
+        userService.registerUser(ssn, firstName, lastName, email, password, address, mobilePhoneNumber,
                 createdBy, createdDate, lastModifiedBy, lastModifiedDate);
         Map<String, Boolean> map = new HashMap<>();
         map.put("success", true);

@@ -3,7 +3,7 @@ package com.banking.api.resources;
 import com.banking.api.domain.Account;
 import com.banking.api.domain.Customer;
 import com.banking.api.services.CustomerService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,12 +15,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/customers")
 public class CustomerResource {
 
-    @Autowired
-    CustomerService customerService;
+    private final CustomerService customerService;
 
     @GetMapping(" ")
     public ResponseEntity<List<Customer>> getAllCustomers(){

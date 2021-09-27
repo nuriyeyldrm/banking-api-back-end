@@ -5,7 +5,7 @@ import com.banking.api.domain.Customer;
 import com.banking.api.exceptions.BankBadRequestException;
 import com.banking.api.exceptions.BankResourceNotFoundException;
 import com.banking.api.repositories.CustomerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,7 +17,9 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
+@AllArgsConstructor
 @Repository
 public class CustomerRepositoryImpl implements CustomerRepository {
 
@@ -43,8 +45,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 
     private static final String SQL_DELETE = "DELETE FROM customers WHERE id = ?";
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public List<Customer> findAll() throws BankResourceNotFoundException {
@@ -86,7 +87,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                 ps.setTimestamp(14, createdDate);
                 return ps;
             }, keyHolder);
-            return (Long) keyHolder.getKeys().get("id");
+            return (Long) Objects.requireNonNull(keyHolder.getKeys()).get("id");
         }catch (Exception e){
             throw new BankBadRequestException("Invalid Request");
         }
@@ -120,32 +121,30 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         return jdbcTemplate.query(SQL_FIND_ALL_CST_ACC, accountRowMapper, userId);
     }
 
-    private RowMapper<Customer> customerRowMapper = ((rs, rowNum) -> {
-        return new Customer(rs.getLong("id"),
-                rs.getLong("user_id"),
-                rs.getString("first_name"),
-                rs.getString("last_name"),
-                rs.getString("middle_initial"),
-                rs.getString("email"),
-                rs.getString("mobile_phone_number"),
-                rs.getString("phone_number"),
-                rs.getString("zip_code"),
-                rs.getString("address"),
-                rs.getString("state"),
-                rs.getString("city"),
-                rs.getString("country"),
-                rs.getString("ssn"),
-                rs.getTimestamp("created_date"));
-    });
+    private final RowMapper<Customer> customerRowMapper = ((rs, rowNum) -> new Customer(
+            rs.getLong("id"),
+            rs.getLong("user_id"),
+            rs.getString("first_name"),
+            rs.getString("last_name"),
+            rs.getString("middle_initial"),
+            rs.getString("email"),
+            rs.getString("mobile_phone_number"),
+            rs.getString("phone_number"),
+            rs.getString("zip_code"),
+            rs.getString("address"),
+            rs.getString("state"),
+            rs.getString("city"),
+            rs.getString("country"),
+            rs.getString("ssn"),
+            rs.getTimestamp("created_date")));
 
-    private RowMapper<Account> accountRowMapper = ((rs, rowNum) -> {
-        return new Account(rs.getLong("id"),
-                rs.getLong("user_id"),
-                rs.getString("description"),
-                rs.getDouble("balance"),
-                rs.getString("account_type"),
-                rs.getString("account_status_type"),
-                rs.getTimestamp("created_date"));
-    });
+    private final RowMapper<Account> accountRowMapper = ((rs, rowNum) -> new Account(
+            rs.getLong("id"),
+            rs.getLong("user_id"),
+            rs.getString("description"),
+            rs.getDouble("balance"),
+            rs.getString("account_type"),
+            rs.getString("account_status_type"),
+            rs.getTimestamp("created_date")));
 
 }

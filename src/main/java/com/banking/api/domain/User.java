@@ -1,10 +1,9 @@
 package com.banking.api.domain;
 
 import com.banking.api.domain.enumeration.AppUserRole;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.context.annotation.Role;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -19,6 +18,7 @@ import java.sql.Timestamp;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User implements Serializable {
@@ -83,10 +83,6 @@ public class User implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "app_user_role", length = 50, updatable = false)
     private AppUserRole appUserRole;
-
-    public User() {
-
-    }
 
     public User(Long id, String ssn, String firstname, String lastname, String email, String password, String address,
                 String mobilePhoneNumber, String createdBy, Timestamp createdDate, String lastModifiedBy,

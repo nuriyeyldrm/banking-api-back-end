@@ -5,7 +5,7 @@ import com.banking.api.domain.Transfer;
 import com.banking.api.exceptions.BankBadRequestException;
 import com.banking.api.exceptions.BankResourceNotFoundException;
 import com.banking.api.repositories.TransferRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,7 +17,9 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+@AllArgsConstructor
 @Repository
 public class TransferRepositoryImpl implements TransferRepository {
 
@@ -41,8 +43,8 @@ public class TransferRepositoryImpl implements TransferRepository {
 
     private static final String SQL_UPDATE_ACC_BALANCE = "UPDATE accounts SET balance = ? WHERE id = ?";
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
+
+    private final JdbcTemplate jdbcTemplate;
 
 
     @Override
@@ -81,7 +83,7 @@ public class TransferRepositoryImpl implements TransferRepository {
 
                 return ps;
             }, keyHolder);
-            return (Long) keyHolder.getKeys().get("id");
+            return (Long) Objects.requireNonNull(keyHolder.getKeys()).get("id");
         }catch (Exception e){
             throw new BankBadRequestException("Invalid Request");
         }
@@ -129,24 +131,22 @@ public class TransferRepositoryImpl implements TransferRepository {
         }
     }
 
-    private RowMapper<Account> accountRowMapper = ((rs, rowNum) -> {
-        return new Account(rs.getLong("id"),
-                rs.getLong("user_id"),
-                rs.getString("description"),
-                rs.getDouble("balance"),
-                rs.getString("account_type"),
-                rs.getString("account_status_type"),
-                rs.getTimestamp("created_date"));
-    });
-    private RowMapper<Transfer> transferRowMapper = ((rs, rowNum) -> {
-        return new Transfer(rs.getLong("id"),
-                rs.getLong("from_account_id"),
-                rs.getLong("to_account_id"),
-                rs.getLong("user_id"),
-                rs.getDouble("transaction_amount"),
-                rs.getDouble("new_balance"),
-                rs.getString("currency_code"),
-                rs.getTimestamp("transaction_date"),
-                rs.getString("description"));
-    });
+    private final RowMapper<Account> accountRowMapper = ((rs, rowNum) -> new Account(
+            rs.getLong("id"),
+            rs.getLong("user_id"),
+            rs.getString("description"),
+            rs.getDouble("balance"),
+            rs.getString("account_type"),
+            rs.getString("account_status_type"),
+            rs.getTimestamp("created_date")));
+    private final RowMapper<Transfer> transferRowMapper = ((rs, rowNum) -> new Transfer(
+            rs.getLong("id"),
+            rs.getLong("from_account_id"),
+            rs.getLong("to_account_id"),
+            rs.getLong("user_id"),
+            rs.getDouble("transaction_amount"),
+            rs.getDouble("new_balance"),
+            rs.getString("currency_code"),
+            rs.getTimestamp("transaction_date"),
+            rs.getString("description")));
 }

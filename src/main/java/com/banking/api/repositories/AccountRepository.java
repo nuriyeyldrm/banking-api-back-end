@@ -1,8 +1,6 @@
 package com.banking.api.repositories;
 
 import com.banking.api.domain.Account;
-import com.banking.api.domain.enumeration.AccountStatusType;
-import com.banking.api.domain.enumeration.AccountType;
 import com.banking.api.exceptions.BankBadRequestException;
 import com.banking.api.exceptions.BankResourceNotFoundException;
 

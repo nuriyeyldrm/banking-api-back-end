@@ -1,12 +1,10 @@
 package com.banking.api.repositories.impl;
 
 import com.banking.api.domain.Account;
-import com.banking.api.domain.enumeration.AccountStatusType;
-import com.banking.api.domain.enumeration.AccountType;
 import com.banking.api.exceptions.BankBadRequestException;
 import com.banking.api.exceptions.BankResourceNotFoundException;
 import com.banking.api.repositories.AccountRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,7 +15,9 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 
+@AllArgsConstructor
 @Repository
 public class AccountRepositoryImpl implements AccountRepository {
 
@@ -38,9 +38,7 @@ public class AccountRepositoryImpl implements AccountRepository {
 
 
 
-
-    @Autowired
-    JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public List<Account> findAll(Long userId) throws BankResourceNotFoundException {
@@ -71,7 +69,7 @@ public class AccountRepositoryImpl implements AccountRepository {
                 ps.setTimestamp(6, createdDate);
                 return ps;
             }, keyHolder);
-            return (Long) keyHolder.getKeys().get("id");
+            return (Long) Objects.requireNonNull(keyHolder.getKeys()).get("id");
         }catch (Exception e){
             throw new BankBadRequestException("Invalid request");
         }
@@ -94,13 +92,12 @@ public class AccountRepositoryImpl implements AccountRepository {
             throw new BankResourceNotFoundException("Account not found");
     }
 
-    private RowMapper<Account> accountRowMapper = ((rs, rowNum) -> {
-        return new Account(rs.getLong("id"),
-                rs.getLong("user_id"),
-                rs.getString("description"),
-                rs.getDouble("balance"),
-                rs.getString("account_type"),
-                rs.getString("account_status_type"),
-                rs.getTimestamp("created_date"));
-    });
+    private final RowMapper<Account> accountRowMapper = ((rs, rowNum) -> new Account(
+            rs.getLong("id"),
+            rs.getLong("user_id"),
+            rs.getString("description"),
+            rs.getDouble("balance"),
+            rs.getString("account_type"),
+            rs.getString("account_status_type"),
+            rs.getTimestamp("created_date")));
 }

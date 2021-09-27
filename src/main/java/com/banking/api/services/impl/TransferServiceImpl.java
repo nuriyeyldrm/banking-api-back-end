@@ -5,19 +5,19 @@ import com.banking.api.exceptions.BankBadRequestException;
 import com.banking.api.exceptions.BankResourceNotFoundException;
 import com.banking.api.repositories.TransferRepository;
 import com.banking.api.services.TransferService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
 
+@AllArgsConstructor
 @Service
 @Transactional
 public class TransferServiceImpl implements TransferService {
 
-    @Autowired
-    TransferRepository transferRepository;
+    private final TransferRepository transferRepository;
 
     @Override
     public List<Transfer> fetchAllTransfers(Long userId) {

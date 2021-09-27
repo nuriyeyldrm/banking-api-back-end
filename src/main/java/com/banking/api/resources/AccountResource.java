@@ -2,7 +2,7 @@ package com.banking.api.resources;
 
 import com.banking.api.domain.Account;
 import com.banking.api.services.AccountService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,12 +14,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/accounts")
 public class AccountResource {
 
-    @Autowired
-    AccountService accountService;
+    private final AccountService accountService;
 
     @GetMapping(" ")
     public ResponseEntity<List<Account>> getAllAccounts(HttpServletRequest request){
